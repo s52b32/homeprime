@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>homeprime</groupId>
+	<artifactId>homeprime-parent</artifactId>
+	<version>R1A01</version>
+	<packaging>pom</packaging>
+	<name>HomePrime Parent</name>
+	<description>A Maven parent for HomePrime projects</description>
+
+	<properties>
+		<homeprime.modules.version>R1A01</homeprime.modules.version>
+	</properties>
+
+	<modules>
+		<module>homeprime-core</module>
+		<module>homeprime-agent</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>homeprime</groupId>
+				<artifactId>homeprime-core</artifactId>
+				<version>${homeprime.modules.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>homeprime</groupId>
+				<artifactId>homeprime-agent</artifactId>
+				<version>${homeprime.modules.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>
