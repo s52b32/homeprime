@@ -11,6 +11,12 @@
 
 	<properties>
 		<homeprime.modules.version>R1A01</homeprime.modules.version>
+		
+		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
+		<!-- JAVA source and target version settings -->
+		<compiler.source.java.version>1.8</compiler.source.java.version>
+		<compiler.target.java.version>1.8</compiler.target.java.version>
+		<compiler.compliance.java.version>1.8</compiler.compliance.java.version>
 	</properties>
 
 	<modules>
@@ -32,5 +38,19 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.plugin.version}</version>
+				<configuration>
+					<source>${compiler.source.java.version}</source>
+					<target>${compiler.target.java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
