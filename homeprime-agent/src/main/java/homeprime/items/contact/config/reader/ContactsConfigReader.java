@@ -18,7 +18,6 @@ import homeprime.items.contact.config.pojos.ContactSensors;
 public class ContactsConfigReader {
 
 	private static String contactSensors = null;
-	private static String sewerContactSensors = null;
 
 	/**
 	 * Hidden constructor.
@@ -40,32 +39,11 @@ public class ContactsConfigReader {
 		}
 	}
 
-	public static ContactSensors getSewer() throws ThingException {
-		try {
-			if (sewerContactSensors == null) {
-				final String pathToConfig = ThingProperties.getInstance().getThingConfigPath() + "sewer_contacts.json";
-				if (ThingUtils.fileExists(pathToConfig)) {
-					sewerContactSensors = ThingUtils.readFile(pathToConfig);
-				} else {
-					throw new ThingException(
-							"ERROR ContactsConfigReader.getContactSensors() Config sewer_contacts.json doesn't exist");
-				}
-			}
-			final ObjectMapper mapper = new ObjectMapper();
-			final ContactSensors tempContactSensorsPojo = mapper.readValue(sewerContactSensors, ContactSensors.class);
-			return tempContactSensorsPojo;
-		} catch (IOException e) {
-			throw new ThingException(
-					"ERROR ContactsConfigReader.getContactSensors() Failed to parse sewer_contacts.json", e);
-		}
-	}
-
 	/**
 	 * Force that next getContactSensors method call reads configuration again.
 	 */
 	public static void resyncConfig() {
 		contactSensors = null;
-		sewerContactSensors = null;
 	}
 
 }

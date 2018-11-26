@@ -59,32 +59,6 @@ public class ContactsController {
 		return null;
 	}
 
-	@Deprecated
-	@RequestMapping("/Thing/Contacts/Sewer")
-	public ResponseEntity<ContactSensors> getSewerContactSensors() {
-		try {
-			return new ResponseEntity<ContactSensors>(ContactsConfigReader.getSewer(), HttpStatus.OK);
-		} catch (ThingException e) {
-			return new ResponseEntity<ContactSensors>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@Deprecated
-	@RequestMapping("/Thing/Contacts/Sewer/read")
-	public ResponseEntity<String> getSewerSensorValue() {
-		try {
-			final Integer sewerPercentage = getSewerPercentage();
-			if (sewerPercentage != null) {
-				return new ResponseEntity<String>(sewerPercentage.toString(), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<String>("Cannot read sewer state if no confiuration found",
-						HttpStatus.NOT_FOUND);
-			}
-		} catch (ThingException e) {
-			return new ResponseEntity<String>("Failed to read sewer status", HttpStatus.BAD_REQUEST);
-		}
-	}
-
 	@RequestMapping("/Thing/Contact/{contactSensorId}")
 	public ResponseEntity<ContactSensor> getTemperatureSensorById(
 			@PathVariable(value = "contactSensorId") int contactSensorId) {
@@ -114,37 +88,6 @@ public class ContactsController {
 		} catch (ThingException e) {
 			return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
 		}
-	}
-
-	@Deprecated
-	private Integer getSewerPercentage() throws ThingException {
-		final ContactSensors contactSensors = ContactsConfigReader.getSewer();
-		Integer sewerPercentage = null;
-		if (contactSensors != null) {
-			final List<ContactSensor> contacts = contactSensors.getContacts();
-			if (!contacts.isEmpty()) {
-				int countSewerContactsInStateTrue = 0;
-				for (ContactSensor contactSensor : contacts) {
-					Boolean readContactState = ContactSensorControllerFactory.getContactSensorsReader()
-							.readContactState(contactSensor);
-					// If initial state id inverse we need to reverse contact
-					// current state
-					if (contactSensor.getInitialState() && readContactState != null) {
-						readContactState = !readContactState;
-					}
-					if (readContactState) {
-						countSewerContactsInStateTrue++;
-					}
-				}
-				final int sewerSize = contacts.size();
-				sewerPercentage = countSewerContactsInStateTrue / sewerSize;
-			} else {
-				throw new ThingException("Cannot calculate sewer percentage if contact list is empty");
-			}
-		} else {
-			throw new ThingException("Cannot calculate sewer percentage if contact list doesn't exists");
-		}
-		return sewerPercentage;
 	}
 
 	private ContactSensor findContactSensorById(int contactSensorId) throws ThingException {
