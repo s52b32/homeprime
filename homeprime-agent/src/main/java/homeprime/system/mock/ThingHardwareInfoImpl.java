@@ -12,19 +12,19 @@ import homeprime.system.config.ThingHardwareInfo;
  */
 public class ThingHardwareInfoImpl implements ThingHardwareInfo {
 
-    @Override
-    public String getSerialNumber() throws ThingException {
-        return "A1MOCK";
-    }
+	@Override
+	public String getSerialNumber() throws ThingException {
+		return "A1MOCK";
+	}
 
-    @Override
-    public String getBoardType() throws ThingException {
-        return "MOCKTYPE";
-    }
+	@Override
+	public String getBoardType() throws ThingException {
+		return "MOCKTYPE";
+	}
 
-    @Override
-    public float getCpuTemperature() throws ThingException {
-        return new Random().nextFloat();
-    }
+	@Override
+	public float getCpuTemperature() throws ThingException {
+		return new Random().nextFloat();
+	}
 
 }

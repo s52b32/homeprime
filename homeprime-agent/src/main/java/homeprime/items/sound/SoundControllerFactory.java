@@ -11,24 +11,25 @@ import homeprime.items.sound.raspberrypi.SoundControllerImpl;
  */
 public class SoundControllerFactory {
 
-    /**
-     * Hidden constructor.
-     */
-    private SoundControllerFactory() {}
+	/**
+	 * Hidden constructor.
+	 */
+	private SoundControllerFactory() {
+	}
 
-    public static SoundController getSoundController() throws ThingException {
-        switch (ThingProperties.getInstance().getThingSystemType()) {
-        case RaspberryPi:
-            return SoundControllerImpl.getInstance();
-        case BananaPi:
-            throw new ThingException("Thing sound control for BannanaPI note supported yet.");
-        case BeagleBoneBlack:
-            throw new ThingException("Thing sound control for BeagleBoneBlack note supported yet.");
-        case Mock:
-            return new homeprime.items.sound.mock.SoundControllerImpl();
-        default:
-            throw new ThingException("Thing sound control implementation for Unknown cannot be created.");
-        }
-    }
+	public static SoundController getSoundController() throws ThingException {
+		switch (ThingProperties.getInstance().getThingSystemType()) {
+		case RaspberryPi:
+			return SoundControllerImpl.getInstance();
+		case BananaPi:
+			throw new ThingException("Thing sound control for BannanaPI note supported yet.");
+		case BeagleBoneBlack:
+			throw new ThingException("Thing sound control for BeagleBoneBlack note supported yet.");
+		case Mock:
+			return new homeprime.items.sound.mock.SoundControllerImpl();
+		default:
+			throw new ThingException("Thing sound control implementation for Unknown cannot be created.");
+		}
+	}
 
 }

@@ -8,6 +8,6 @@ package homeprime.items.relay.config.enums;
  */
 public enum RelayChannelState {
 
-    ON, OFF, UNKNOWN
+	ON, OFF, UNKNOWN
 
 }

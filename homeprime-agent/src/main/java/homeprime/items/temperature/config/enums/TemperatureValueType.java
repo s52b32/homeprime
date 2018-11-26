@@ -12,16 +12,16 @@ import homeprime.core.logger.IoTLogger;
  */
 public enum TemperatureValueType {
 
-    Celsius, Farenheit, Unknown;
+	Celsius, Farenheit, Unknown;
 
-    @JsonCreator
-    public static TemperatureValueType fromString(String param) {
-	try {
-	    return valueOf(param);
-	} catch (Exception e) {
-	    IoTLogger.getInstance().error("Temperature value type: " + param + " is not supported, returning Unknown");
+	@JsonCreator
+	public static TemperatureValueType fromString(String param) {
+		try {
+			return valueOf(param);
+		} catch (Exception e) {
+			IoTLogger.getInstance().error("Temperature value type: " + param + " is not supported, returning Unknown");
+		}
+		return TemperatureValueType.Unknown;
 	}
-	return TemperatureValueType.Unknown;
-    }
 
 }

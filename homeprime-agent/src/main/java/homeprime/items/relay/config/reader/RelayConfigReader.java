@@ -17,33 +17,34 @@ import homeprime.items.relay.config.pojos.RelayBoards;
  */
 public class RelayConfigReader {
 
-    private static String relayBoards = null;
+	private static String relayBoards = null;
 
-    /**
-     * Hidden constructor.
-     */
-    private RelayConfigReader() {
-    }
-
-    public static RelayBoards getRelayBoards() throws ThingException {
-
-	try {
-	    if (relayBoards == null) {
-		relayBoards = ThingUtils.readFile(ThingProperties.getInstance().getThingConfigPath() + "relay_board.json");
-	    }
-	    final ObjectMapper mapper = new ObjectMapper();
-	    final RelayBoards relayBoardsPojo = mapper.readValue(relayBoards, RelayBoards.class);
-	    return relayBoardsPojo;
-	} catch (IOException e) {
-	    throw new ThingException("RelayInfo.getRelayBoards() Failed to parse relay_boards.json", e);
+	/**
+	 * Hidden constructor.
+	 */
+	private RelayConfigReader() {
 	}
-    }
 
-    /**
-     * Force that next getRelayBoards method call reads configuration again.
-     */
-    public static void resyncConfig() {
-	relayBoards = null;
-    }
+	public static RelayBoards getRelayBoards() throws ThingException {
+
+		try {
+			if (relayBoards == null) {
+				relayBoards = ThingUtils
+						.readFile(ThingProperties.getInstance().getThingConfigPath() + "relay_board.json");
+			}
+			final ObjectMapper mapper = new ObjectMapper();
+			final RelayBoards relayBoardsPojo = mapper.readValue(relayBoards, RelayBoards.class);
+			return relayBoardsPojo;
+		} catch (IOException e) {
+			throw new ThingException("RelayInfo.getRelayBoards() Failed to parse relay_boards.json", e);
+		}
+	}
+
+	/**
+	 * Force that next getRelayBoards method call reads configuration again.
+	 */
+	public static void resyncConfig() {
+		relayBoards = null;
+	}
 
 }

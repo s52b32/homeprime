@@ -10,14 +10,14 @@ import homeprime.core.exceptions.ThingException;
  */
 public interface ThingOsInfo {
 
-    public String getOsName() throws ThingException;
+	public String getOsName() throws ThingException;
 
-    public String getOsVersion() throws ThingException;
+	public String getOsVersion() throws ThingException;
 
-    public String getOsArchitecture() throws ThingException;
+	public String getOsArchitecture() throws ThingException;
 
-    public String getOsFirmwareBuild() throws ThingException;
+	public String getOsFirmwareBuild() throws ThingException;
 
-    public String getOsFirmwareDate() throws ThingException;
+	public String getOsFirmwareDate() throws ThingException;
 
 }

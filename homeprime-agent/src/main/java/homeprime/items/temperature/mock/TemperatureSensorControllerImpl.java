@@ -14,20 +14,20 @@ import homeprime.items.temperature.config.pojos.TemperatureSensor;
  */
 public class TemperatureSensorControllerImpl implements TemperatureSensorController {
 
-    @Override
-    public float readTemperature(TemperatureSensor temperatureSensorData) throws ThingException {
-        if (temperatureSensorData != null) {
-            try {
-                return Float.parseFloat(ThingUtils.readFile("mock/temperature.data"));
-            } catch (NumberFormatException e) {
-                return (float) -99.99;
-            } catch (IOException e) {
-                return (float) -99.99;
-            }
-        } else {
-            // This represents that something went wrong.
-            return (float) -99.99;
-        }
-    }
+	@Override
+	public float readTemperature(TemperatureSensor temperatureSensorData) throws ThingException {
+		if (temperatureSensorData != null) {
+			try {
+				return Float.parseFloat(ThingUtils.readFile("mock/temperature.data"));
+			} catch (NumberFormatException e) {
+				return (float) -99.99;
+			} catch (IOException e) {
+				return (float) -99.99;
+			}
+		} else {
+			// This represents that something went wrong.
+			return (float) -99.99;
+		}
+	}
 
 }

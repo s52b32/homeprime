@@ -33,6 +33,12 @@ public class TemperatureController {
 		}
 	}
 
+	@RequestMapping("/Thing/Temperatures/sync")
+	public ResponseEntity<String> syncTemperatureConfig() {
+		TemperatureConfigReader.resyncConfig();
+		return new ResponseEntity<String>("Temperature config re-sync scheduled", HttpStatus.OK);
+	}
+
 	@RequestMapping("/Thing/Temperature/{temperatureSensorId}")
 	public ResponseEntity<TemperatureSensor> getTemperatureSensorById(
 			@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {

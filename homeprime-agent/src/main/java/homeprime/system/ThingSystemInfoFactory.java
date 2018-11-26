@@ -13,25 +13,25 @@ import homeprime.system.raspberrypi.ThingSystemInfoImpl;
  */
 public class ThingSystemInfoFactory {
 
-    /**
-     * Hidden constructor.
-     */
-    private ThingSystemInfoFactory() {
-    }
-
-    public static ThingSystemInfo getThingSystemInfo() throws ThingException {
-	switch (ThingProperties.getInstance().getThingSystemType()) {
-	case RaspberryPi:
-	    return new ThingSystemInfoImpl();
-	case BananaPi:
-	    return new homeprime.system.bannanapi.ThingSystemInfoImpl();
-	case BeagleBoneBlack:
-	    return new homeprime.system.beagleboneblack.ThingSystemInfoImpl();
-	case Mock:
-        return new homeprime.system.mock.ThingSystemInfoImpl();
-	default:
-	    throw new ThingException("Thing system info implementation for Unknown icannot be created.");
+	/**
+	 * Hidden constructor.
+	 */
+	private ThingSystemInfoFactory() {
 	}
-    }
+
+	public static ThingSystemInfo getThingSystemInfo() throws ThingException {
+		switch (ThingProperties.getInstance().getThingSystemType()) {
+		case RaspberryPi:
+			return new ThingSystemInfoImpl();
+		case BananaPi:
+			return new homeprime.system.bannanapi.ThingSystemInfoImpl();
+		case BeagleBoneBlack:
+			return new homeprime.system.beagleboneblack.ThingSystemInfoImpl();
+		case Mock:
+			return new homeprime.system.mock.ThingSystemInfoImpl();
+		default:
+			throw new ThingException("Thing system info implementation for Unknown icannot be created.");
+		}
+	}
 
 }

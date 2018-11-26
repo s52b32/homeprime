@@ -12,27 +12,27 @@ import homeprime.core.logger.IoTLogger;
  */
 public enum RelayType {
 
-    /**
-     * Normally closed.
-     */
-    NC,
-    /**
-     * Normally opened.
-     */
-    NO,
-    /**
-     * Information not provided.
-     */
-    Unknown;
+	/**
+	 * Normally closed.
+	 */
+	NC,
+	/**
+	 * Normally opened.
+	 */
+	NO,
+	/**
+	 * Information not provided.
+	 */
+	Unknown;
 
-    @JsonCreator
-    public static RelayType fromString(String param) {
-	try {
-	    return valueOf(param);
-	} catch (Exception e) {
-	    IoTLogger.getInstance().error("Relay type: " + param + " is not supported, returning Unknown");
+	@JsonCreator
+	public static RelayType fromString(String param) {
+		try {
+			return valueOf(param);
+		} catch (Exception e) {
+			IoTLogger.getInstance().error("Relay type: " + param + " is not supported, returning Unknown");
+		}
+		return RelayType.Unknown;
 	}
-	return RelayType.Unknown;
-    }
 
 }

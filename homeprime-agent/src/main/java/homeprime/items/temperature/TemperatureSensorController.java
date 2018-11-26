@@ -11,13 +11,12 @@ import homeprime.items.temperature.config.pojos.TemperatureSensor;
  */
 public interface TemperatureSensorController {
 
-    /**
-     * Read temperature from provided sensor.
-     * 
-     * @param temperatureSensorData
-     *            temperature sensor data
-     * @return temperature from sensor
-     */
-    public float readTemperature(TemperatureSensor temperatureSensorData) throws ThingException;
+	/**
+	 * Read temperature from provided sensor.
+	 * 
+	 * @param temperatureSensorData temperature sensor data
+	 * @return temperature from sensor
+	 */
+	public float readTemperature(TemperatureSensor temperatureSensorData) throws ThingException;
 
 }

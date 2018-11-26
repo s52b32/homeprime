@@ -12,16 +12,16 @@ import homeprime.core.logger.IoTLogger;
  */
 public enum PayloadType {
 
-    Light, HVAC, Amplifier, LCD, WaterPump, WaterHeater, FloorHeater, WallHeater, Door, Generic, Unknown;
+	Light, HVAC, Amplifier, LCD, WaterPump, WaterHeater, FloorHeater, WallHeater, Door, Generic, Unknown;
 
-    @JsonCreator
-    public static PayloadType fromString(String param) {
-	try {
-	    return valueOf(param);
-	} catch (Exception e) {
-	    IoTLogger.getInstance().error("Payload type: " + param + " is not supported, returning Unknown");
+	@JsonCreator
+	public static PayloadType fromString(String param) {
+		try {
+			return valueOf(param);
+		} catch (Exception e) {
+			IoTLogger.getInstance().error("Payload type: " + param + " is not supported, returning Unknown");
+		}
+		return PayloadType.Unknown;
 	}
-	return PayloadType.Unknown;
-    }
 
 }

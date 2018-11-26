@@ -11,10 +11,10 @@ import homeprime.core.exceptions.ThingException;
  */
 public interface ThingSystemInfo {
 
-    public ThingHardwareInfo getThingHardwareInfo() throws ThingException;
+	public ThingHardwareInfo getThingHardwareInfo() throws ThingException;
 
-    public ThingMemoryInfo getThingMemoryInfo() throws ThingException;
+	public ThingMemoryInfo getThingMemoryInfo() throws ThingException;
 
-    public ThingOsInfo getThingOsInfo() throws ThingException;
+	public ThingOsInfo getThingOsInfo() throws ThingException;
 
 }

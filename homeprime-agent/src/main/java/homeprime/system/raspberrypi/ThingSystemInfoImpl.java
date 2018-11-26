@@ -14,19 +14,19 @@ import homeprime.system.config.ThingSystemInfo;
  */
 public class ThingSystemInfoImpl implements ThingSystemInfo {
 
-    @Override
-    public ThingHardwareInfo getThingHardwareInfo() throws ThingException {
-	return new ThingHardwareInfoImpl();
-    }
+	@Override
+	public ThingHardwareInfo getThingHardwareInfo() throws ThingException {
+		return new ThingHardwareInfoImpl();
+	}
 
-    @Override
-    public ThingMemoryInfo getThingMemoryInfo() throws ThingException {
-	return new ThingMemoryInfoImpl();
-    }
+	@Override
+	public ThingMemoryInfo getThingMemoryInfo() throws ThingException {
+		return new ThingMemoryInfoImpl();
+	}
 
-    @Override
-    public ThingOsInfo getThingOsInfo() throws ThingException {
-	return new ThingOSInfoImpl();
-    }
+	@Override
+	public ThingOsInfo getThingOsInfo() throws ThingException {
+		return new ThingOSInfoImpl();
+	}
 
 }
