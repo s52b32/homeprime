@@ -24,6 +24,10 @@ public class ThingProperties {
 	private static String thingConfigPath = "configs/";
 	private static String uuid = null;
 	private static String version = "R1A12";
+	/**
+	 *  Initial state of maintenance is set to enabled (true). Disabled once system starts.
+	 */
+	private static Boolean maintenanceState = true;
 
 	/**
 	 * Hidden Constructor
@@ -89,6 +93,14 @@ public class ThingProperties {
 
 	public String getThingVersion() {
 		return version;
+	}
+
+	public Boolean getMaintenanceState() {
+		return maintenanceState;
+	}
+
+	public void setMaintenanceState(Boolean maintenanceState) {
+		ThingProperties.maintenanceState = maintenanceState;
 	}
 
 	/**

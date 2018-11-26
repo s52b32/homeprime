@@ -3,8 +3,6 @@ package homeprime.core.system;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Generated;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,14 +18,15 @@ import homeprime.core.properties.ThingProperties;
  * @author Milan Ramljak
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({ "version", "uuid" })
+@JsonPropertyOrder({ "version", "uuid", "maintenance" })
 public class ThingInfo {
 
 	@JsonProperty("version")
 	private String version;
 	@JsonProperty("uuid")
 	private String uuid;
+	@JsonProperty("maintenance")
+	private Boolean maintenance;
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -61,6 +60,22 @@ public class ThingInfo {
 	@JsonProperty("uuid")
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	/**
+	 * @return maintenance state of the thing
+	 */
+	@JsonProperty("maintenance")
+	public Boolean getMaintenance() {
+		return ThingProperties.getInstance().getMaintenanceState();
+	}
+
+	/**
+	 * @param maintenance maintenance status
+	 */
+	@JsonProperty("maintenance")
+	public void setMaintenance(Boolean maintenance) {
+		this.maintenance = maintenance;
 	}
 
 	@JsonAnyGetter
