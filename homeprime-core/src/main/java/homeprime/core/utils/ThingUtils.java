@@ -5,11 +5,17 @@ import java.io.IOException;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 import homeprime.core.logger.IoTLogger;
+import homeprime.core.properties.ThingProperties;
 import homeprime.core.system.config.enums.OsType;
+import homeprime.core.system.config.enums.ThingSystemType;
 
 /**
  * Utilities class holding common helper methods
@@ -95,5 +101,60 @@ public class ThingUtils {
 		}
 		return osType;
 
+	}
+
+	/**
+	 * Helper method which creates random UUID and writes it to
+	 * {@code configs/thing.uuid} file.
+	 * 
+	 * @return uuid as string
+	 */
+	public static String generateThingUuid() {
+		final Path file = Paths.get(ThingProperties.getInstance().getThingConfigPath() + "thing.uuid");
+		final UUID generatedId = UUID.randomUUID();
+		try {
+			Files.write(file, generatedId.toString().getBytes());
+		} catch (IOException e) {
+			IoTLogger.getInstance().error("ThingUtils.generateThingUuid() Failed to write UUID to: "
+					+ ThingProperties.getInstance().getThingConfigPath() + "thing.uuid");
+			System.exit(1);
+		}
+		return generatedId.toString();
+	}
+
+	/**
+	 * Helper method for thing system type detection. Uses local session to execute
+	 * {@code uname -n} command
+	 */
+	public static ThingSystemType detectThingSystemType() {
+		ThingSystemType thingSystemType = ThingSystemType.Unknown;
+		String nodename = null;
+		try {
+			nodename = ThingUtils.readFile(ThingProperties.getInstance().getThingConfigPath() + "thing.info");
+			if (nodename == null) {
+				IoTLogger.getInstance()
+						.info("ERROR ThingProperties.detectThingSystemType() Failed to get thing system type from "
+								+ ThingProperties.getInstance().getThingConfigPath() + "thing.info");
+				thingSystemType = ThingSystemType.Unknown;
+			} else if (nodename.contains("raspberrypi")) {
+				thingSystemType = ThingSystemType.RaspberryPi;
+			} else if (nodename.contains("bannanapi")) {
+				thingSystemType = ThingSystemType.BananaPi;
+			} else if (nodename.contains("beagleboneblack")) {
+				thingSystemType = ThingSystemType.BeagleBoneBlack;
+			} else if (nodename.contains("mock")) {
+				thingSystemType = ThingSystemType.Mock;
+			} else {
+				IoTLogger.getInstance().info(
+						"ERROR ThingProperties.detectThingSystemType() Detect system type returned unknown value: "
+								+ nodename);
+				thingSystemType = ThingSystemType.Unknown;
+			}
+		} catch (IOException e) {
+			IoTLogger.getInstance().error("ThingProperties.detectThingSystemType() Failed to read "
+					+ ThingProperties.getInstance().getThingConfigPath() + "thing.info");
+			thingSystemType = ThingSystemType.Unknown;
+		}
+		return thingSystemType;
 	}
 }

@@ -2,17 +2,13 @@ package homeprime.core.properties;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 import homeprime.core.logger.IoTLogger;
 import homeprime.core.system.config.enums.ThingSystemType;
 import homeprime.core.utils.ThingUtils;
 
 /**
- * Properties holder for homeprime agent integration.
+ * Properties holder for HomePrime agent integration.
  * 
  * @author Milan Ramljak
  */
@@ -25,7 +21,8 @@ public class ThingProperties {
 	private static String uuid = null;
 	private static String version = "R1A12";
 	/**
-	 *  Initial state of maintenance is set to enabled (true). Disabled once system starts.
+	 * Initial state of maintenance is set to enabled (true). Disabled once system
+	 * starts.
 	 */
 	private static Boolean maintenanceState = true;
 
@@ -39,7 +36,7 @@ public class ThingProperties {
 	public static ThingProperties getInstance() {
 		if (instance == null) {
 			instance = new ThingProperties();
-			detectThingSystemType();
+			thingSystemType = ThingUtils.detectThingSystemType();
 		}
 		return instance;
 	}
@@ -50,30 +47,31 @@ public class ThingProperties {
 	 * @param filePath full path to file
 	 * @return {@code true} if file exists, otherwise {@code false}
 	 */
-	public String getUUID() {
+	public String getThingUuid() {
 		if (uuid != null) {
 			return uuid;
 		}
-		final File f = new File(thingConfigPath + "agent.uuid");
+		final File f = new File(thingConfigPath + "thing.uuid");
 		if (f.exists() && !f.isDirectory()) {
 			String uuid = null;
 			try {
-				uuid = ThingUtils.readFile(thingConfigPath + "agent.uuid");
+				uuid = ThingUtils.readFile(thingConfigPath + "thing.uuid");
 			} catch (IOException e) {
-				IoTLogger.getInstance().error("ThingProperties.getUUID() Failed to read thing UUID from file");
+				IoTLogger.getInstance().error("ThingProperties.getThingUuid() Failed to read thing UUID from file");
 			}
 			if (uuid != null) {
 				return uuid.trim();
 			} else {
 				IoTLogger.getInstance().info(
-						"ThingProperties.getUUID() Thing UUID definition file shouln't be empty, proceeding with creation ...");
-				return createUUID();
+						"ThingProperties.getThingUuid() Thing UUID definition file shouln't be empty, proceeding with creation ...");
+				ThingProperties.uuid = ThingUtils.generateThingUuid();
 			}
 		} else {
 			IoTLogger.getInstance()
-					.info("ThingProperties.getUUID() Thing UUID doesn't exist, proceeding with creation ...");
-			return createUUID();
+					.info("ThingProperties.getThingUuid() Thing UUID doesn't exist, proceeding with creation ...");
+			ThingProperties.uuid = ThingUtils.generateThingUuid();
 		}
+		return uuid;
 	}
 
 	/**
@@ -101,60 +99,6 @@ public class ThingProperties {
 
 	public void setMaintenanceState(Boolean maintenanceState) {
 		ThingProperties.maintenanceState = maintenanceState;
-	}
-
-	/**
-	 * Helper method for thing system type detection. Uses local session to execute
-	 * {@code uname -n} command
-	 */
-	private static void detectThingSystemType() {
-		String nodename = null;
-		try {
-			nodename = ThingUtils.readFile(thingConfigPath + "thing.info");
-			if (nodename == null) {
-				IoTLogger.getInstance()
-						.info("ERROR ThingProperties.detectThingSystemType() Failed to get thing system type from "
-								+ thingConfigPath + "thing.info");
-				thingSystemType = ThingSystemType.Unknown;
-			} else if (nodename.contains("raspberrypi")) {
-				thingSystemType = ThingSystemType.RaspberryPi;
-			} else if (nodename.contains("bannanapi")) {
-				thingSystemType = ThingSystemType.BananaPi;
-			} else if (nodename.contains("beagleboneblack")) {
-				thingSystemType = ThingSystemType.BeagleBoneBlack;
-			} else if (nodename.contains("mock")) {
-				thingSystemType = ThingSystemType.Mock;
-			} else {
-				IoTLogger.getInstance().info(
-						"ERROR ThingProperties.detectThingSystemType() Detect system type returned unknown value: "
-								+ nodename);
-				thingSystemType = ThingSystemType.Unknown;
-			}
-		} catch (IOException e) {
-			IoTLogger.getInstance().info(
-					"ERROR ThingProperties.detectThingSystemType() Failed to read " + thingConfigPath + "thing.info");
-			thingSystemType = ThingSystemType.Unknown;
-		}
-	}
-
-	/**
-	 * Helper method which creates UUID and writes it to {@code configs/thing.uuid}
-	 * file.
-	 * 
-	 * @return uuid as string
-	 */
-	private String createUUID() {
-		final Path file = Paths.get(thingConfigPath + "thing.uuid");
-		final UUID generatedId = UUID.randomUUID();
-		try {
-			Files.write(file, generatedId.toString().getBytes());
-		} catch (IOException e) {
-			IoTLogger.getInstance().info(
-					"ERROR ThingProperties.createUUID() Failed to write UUID to: " + thingConfigPath + "thing.uuid");
-			System.exit(1);
-		}
-		uuid = generatedId.toString();
-		return uuid;
 	}
 
 }
