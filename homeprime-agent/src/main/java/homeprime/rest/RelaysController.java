@@ -35,7 +35,7 @@ public class RelaysController {
 	}
     }
 
-    @RequestMapping("/Thing/Relays/Synch")
+    @RequestMapping("/Thing/Relays/sync")
     public ResponseEntity<String> syncRelayConfig() {
 	RelayConfigReader.resyncConfig();
 	return new ResponseEntity<String>("Relay config re-sync scheduled", HttpStatus.OK);

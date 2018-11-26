@@ -23,57 +23,60 @@ import homeprime.items.temperature.config.reader.TemperatureConfigReader;
 @RestController
 public class TemperatureController {
 
-    @RequestMapping("/Thing/Temperatures")
-    public ResponseEntity<TemperatureSensors> getTemperatureSensors() {
-	try {
-	    return new ResponseEntity<TemperatureSensors>(TemperatureConfigReader.getTemperatureSensors(), HttpStatus.OK);
-	} catch (ThingException e) {
-	    return new ResponseEntity<TemperatureSensors>(HttpStatus.BAD_REQUEST);
-	}
-    }
-
-    @RequestMapping("/Thing/Temperature/{temperatureSensorId}")
-    public ResponseEntity<TemperatureSensor> getTemperatureSensorById(@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {
-	try {
-	    return new ResponseEntity<TemperatureSensor>(findTemperatureSensorById(temperatureSensorId), HttpStatus.OK);
-	} catch (ThingException e) {
-	    return new ResponseEntity<TemperatureSensor>(HttpStatus.BAD_REQUEST);
-	}
-    }
-
-    @RequestMapping("/Thing/Temperature/{temperatureSensorId}/read")
-    public ResponseEntity<Float> getTemperatureSensorValue(@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {
-	try {
-	    final TemperatureSensor temperatureSensor = findTemperatureSensorById(temperatureSensorId);
-	    if (temperatureSensor != null) {
-		return new ResponseEntity<Float>(TemperatureSensorControllerFactory.getTemperatureSensorReader().readTemperature(temperatureSensor),
-			HttpStatus.OK);
-	    } else {
-		return new ResponseEntity<Float>(HttpStatus.NOT_FOUND);
-	    }
-	} catch (ThingException e) {
-	    return new ResponseEntity<Float>(HttpStatus.BAD_REQUEST);
-	}
-    }
-
-    private TemperatureSensor findTemperatureSensorById(int temperatureSensorId) throws ThingException {
-	TemperatureSensors temperatureSensorsPojo = null;
-	try {
-	    temperatureSensorsPojo = TemperatureConfigReader.getTemperatureSensors();
-	} catch (ThingException e) {
-	    throw new ThingException("ERROR ThingTemperatureController.findTemperatureSensorById( " + temperatureSensorId
-		    + ") Failed to get temperature sensors.", e);
-	}
-	if (temperatureSensorsPojo != null) {
-	    final List<TemperatureSensor> temperatureSensors = temperatureSensorsPojo.getTemperatureSensors();
-	    if (!temperatureSensors.isEmpty()) {
-		for (TemperatureSensor temperatureSensor : temperatureSensors) {
-		    if (temperatureSensor.getId() == temperatureSensorId) {
-			return temperatureSensor;
-		    }
+	@RequestMapping("/Thing/Temperatures")
+	public ResponseEntity<TemperatureSensors> getTemperatureSensors() {
+		try {
+			return new ResponseEntity<TemperatureSensors>(TemperatureConfigReader.getTemperatureSensors(),
+					HttpStatus.OK);
+		} catch (ThingException e) {
+			return new ResponseEntity<TemperatureSensors>(HttpStatus.BAD_REQUEST);
 		}
-	    }
 	}
-	return null;
-    }
+
+	@RequestMapping("/Thing/Temperature/{temperatureSensorId}")
+	public ResponseEntity<TemperatureSensor> getTemperatureSensorById(
+			@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {
+		try {
+			return new ResponseEntity<TemperatureSensor>(findTemperatureSensorById(temperatureSensorId), HttpStatus.OK);
+		} catch (ThingException e) {
+			return new ResponseEntity<TemperatureSensor>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping("/Thing/Temperature/{temperatureSensorId}/read")
+	public ResponseEntity<Float> getTemperatureSensorValue(
+			@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {
+		try {
+			final TemperatureSensor temperatureSensor = findTemperatureSensorById(temperatureSensorId);
+			if (temperatureSensor != null) {
+				return new ResponseEntity<Float>(TemperatureSensorControllerFactory.getTemperatureSensorReader()
+						.readTemperature(temperatureSensor), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Float>(HttpStatus.NOT_FOUND);
+			}
+		} catch (ThingException e) {
+			return new ResponseEntity<Float>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	private TemperatureSensor findTemperatureSensorById(int temperatureSensorId) throws ThingException {
+		TemperatureSensors temperatureSensorsPojo = null;
+		try {
+			temperatureSensorsPojo = TemperatureConfigReader.getTemperatureSensors();
+		} catch (ThingException e) {
+			throw new ThingException("ERROR ThingTemperatureController.findTemperatureSensorById( "
+					+ temperatureSensorId + ") Failed to get temperature sensors.", e);
+		}
+		if (temperatureSensorsPojo != null) {
+			final List<TemperatureSensor> temperatureSensors = temperatureSensorsPojo.getTemperatureSensors();
+			if (!temperatureSensors.isEmpty()) {
+				for (TemperatureSensor temperatureSensor : temperatureSensors) {
+					if (temperatureSensor.getId() == temperatureSensorId) {
+						return temperatureSensor;
+					}
+				}
+			}
+		}
+		return null;
+	}
 }

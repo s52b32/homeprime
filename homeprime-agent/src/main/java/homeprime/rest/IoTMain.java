@@ -9,7 +9,7 @@ import homeprime.core.properties.ThingProperties;
 import homeprime.items.relay.RelayChannelStateControllerFactory;
 
 /**
- * Main class to start STRAWA HAB RESTful service.
+ * Main class to start HomePrime Agent RESTful service.
  * 
  * @author Milan Ramljak
  * 
@@ -17,18 +17,19 @@ import homeprime.items.relay.RelayChannelStateControllerFactory;
 @SpringBootApplication
 public class IoTMain {
 
-    public static void main(String[] args) {
-	SpringApplication.run(IoTMain.class, args);
-	IoTLogger.getInstance().info("Initializing properties ...");
-	ThingProperties.getInstance();
-	IoTLogger.getInstance().info("---- STRAWA iHOUSE HAB ----");
+	public static void main(String[] args) {
+		IoTLogger.getInstance().info("---- HomePrime Agent (starting)----");
+		SpringApplication.run(IoTMain.class, args);
+		IoTLogger.getInstance().info("Initializing properties ...");
+		ThingProperties.getInstance();
+		IoTLogger.getInstance().info("---- HomePrime Agent (started) ----");
 
-	// Initialize relay related pins
-	try {
-	    IoTLogger.getInstance().info("Initializing relay pins ...");
-	    RelayChannelStateControllerFactory.getRelayChannelStateReader().initialize();
-	} catch (ThingException e) {
-	    IoTLogger.getInstance().error("Failed to initialize relay related pins.");
+		// Initialize relay related pins
+		try {
+			IoTLogger.getInstance().info("Initializing relay pins ...");
+			RelayChannelStateControllerFactory.getRelayChannelStateReader().initialize();
+		} catch (ThingException e) {
+			IoTLogger.getInstance().error("Failed to initialize relay related pins.");
+		}
 	}
-    }
 }
