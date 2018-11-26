@@ -15,11 +15,11 @@ import homeprime.items.relay.RelayChannelStateControllerFactory;
  * 
  */
 @SpringBootApplication
-public class IoTMain {
+public class StartupManager {
 
 	public static void main(String[] args) {
 		IoTLogger.getInstance().info("---- HomePrime Agent (starting)----");
-		SpringApplication.run(IoTMain.class, args);
+		SpringApplication.run(StartupManager.class, args);
 		IoTLogger.getInstance().info("Initializing properties ...");
 		ThingProperties.getInstance();
 		IoTLogger.getInstance().info("---- HomePrime Agent (started) ----");
