@@ -58,7 +58,7 @@ public class LocalCmdExecutionImpl implements LocalCmdExecution {
 	}
 
 	public synchronized String execute(String command) {
-			return executeCommand(command);
+		return executeCommand(command);
 	}
 
 	private String executeCommand(String command) {
