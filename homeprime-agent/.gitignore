@@ -13,6 +13,10 @@
 /log/
 /target/
 
-#Jcat/TestNg
+#TestNg
 /test-output/
 /target
+
+#HomePrime
+/configs
+/libs
