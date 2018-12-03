@@ -2,8 +2,6 @@ package homeprime.items.relay.config.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import homeprime.core.logger.IoTLogger;
-
 /**
  * Type of relay channel.
  * 
@@ -30,7 +28,6 @@ public enum RelayType {
 		try {
 			return valueOf(param);
 		} catch (Exception e) {
-			IoTLogger.getInstance().error("Relay type: " + param + " is not supported, returning Unknown");
 		}
 		return RelayType.Unknown;
 	}

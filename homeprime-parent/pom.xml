@@ -21,6 +21,7 @@
 
 	<modules>
 		<module>homeprime-core</module>
+		<module>homeprime-model</module>
 		<module>homeprime-agent</module>
 	</modules>
 
@@ -29,6 +30,11 @@
 			<dependency>
 				<groupId>homeprime</groupId>
 				<artifactId>homeprime-core</artifactId>
+				<version>${homeprime.modules.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>homeprime</groupId>
+				<artifactId>homeprime-model</artifactId>
 				<version>${homeprime.modules.version}</version>
 			</dependency>
 			<dependency>

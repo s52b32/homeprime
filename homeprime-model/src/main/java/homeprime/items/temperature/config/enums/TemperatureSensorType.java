@@ -2,8 +2,6 @@ package homeprime.items.temperature.config.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import homeprime.core.logger.IoTLogger;
-
 /**
  * Supported temperature sensor types.
  * 
@@ -19,7 +17,6 @@ public enum TemperatureSensorType {
 		try {
 			return valueOf(param);
 		} catch (Exception e) {
-			IoTLogger.getInstance().error("Temperature sensor type: " + param + " is not supported, returning Unknown");
 		}
 		return TemperatureSensorType.Unknown;
 	}

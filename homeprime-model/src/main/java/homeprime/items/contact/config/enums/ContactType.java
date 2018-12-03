@@ -2,8 +2,6 @@ package homeprime.items.contact.config.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import homeprime.core.logger.IoTLogger;
-
 /**
  * Types of contact.
  * 
@@ -38,7 +36,6 @@ public enum ContactType {
 		try {
 			return valueOf(contactType);
 		} catch (Exception e) {
-			IoTLogger.getInstance().error("Contact type: " + contactType + " is not supported, returning Unknown");
 		}
 		return ContactType.Unknown;
 	}

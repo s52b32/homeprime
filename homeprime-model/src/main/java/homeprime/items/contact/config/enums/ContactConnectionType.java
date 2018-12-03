@@ -2,8 +2,6 @@ package homeprime.items.contact.config.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import homeprime.core.logger.IoTLogger;
-
 /**
  * Types of contact connection status.
  * 
@@ -30,8 +28,6 @@ public enum ContactConnectionType {
 		try {
 			return valueOf(cotactConnectionType);
 		} catch (Exception e) {
-			IoTLogger.getInstance()
-					.error("Contact status type: " + cotactConnectionType + " is not supported, returning Unknown");
 		}
 		return ContactConnectionType.Unknown;
 	}

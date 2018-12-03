@@ -2,8 +2,6 @@ package homeprime.items.contact.config.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import homeprime.core.logger.IoTLogger;
-
 /**
  * Types of contact sensor triggering.
  * 
@@ -34,7 +32,6 @@ public enum ContactTriggerType {
 		try {
 			return valueOf(contactTriggerType);
 		} catch (Exception e) {
-			IoTLogger.getInstance().error("Contact trigger type: " + contactTriggerType + " is not supported, returning Unknown");
 		}
 		return ContactTriggerType.Unknown;
 	}

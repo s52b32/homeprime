@@ -23,6 +23,10 @@
 			<artifactId>homeprime-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>homeprime</groupId>
+			<artifactId>homeprime-model</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.pi4j</groupId>
 			<artifactId>pi4j-core</artifactId>
 			<version>${com.pi4j.version}</version>
