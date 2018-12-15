@@ -1,5 +1,6 @@
 package homeprime.rest;
 
+import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ import homeprime.core.system.ThingInfo;
  * @author Milan Ramljak
  */
 @RestController
-public class ThingController {
+public class ThingController implements ErrorController {
 
 	@RequestMapping("/")
 	public ThingInfo index() {
@@ -36,7 +37,7 @@ public class ThingController {
 		System.exit(0);
 		return new ResponseEntity<String>("Maintenance Mode - enabled", HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Enable maintenance mode on the thing.
 	 * 
@@ -69,6 +70,11 @@ public class ThingController {
 	public ResponseEntity<String> getThingMaintenaceState() {
 		return new ResponseEntity<String>(ThingProperties.getInstance().getMaintenanceState().toString(),
 				HttpStatus.OK);
+	}
+
+	@Override
+	public String getErrorPath() {
+		return "You reached invalid page!";
 	}
 
 }
