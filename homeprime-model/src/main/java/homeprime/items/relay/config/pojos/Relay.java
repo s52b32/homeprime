@@ -20,7 +20,7 @@ import homeprime.items.relay.config.enums.RelayType;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "id", "pin", "name", "relayType", "payloadType" })
-public class RelayChannel {
+public class Relay {
 
 	@JsonProperty("id")
 	private Integer id;

@@ -6,7 +6,7 @@ package homeprime.items.relay.config.enums;
  * @author Milan Ramljak
  * 
  */
-public enum RelayChannelState {
+public enum RelayState {
 
 	ON, OFF, UNKNOWN
 

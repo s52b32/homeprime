@@ -13,56 +13,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * Object representing relay board connected to thing.
+ * Object representing relay collection connected to thing.
  * 
  * @author Milan Ramljak
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "id", "relayChannels" })
-public class RelayBoard {
+@JsonPropertyOrder({ "relays" })
+public class Relays {
 
-	@JsonProperty("id")
-	private Integer id;
-	@JsonProperty("relayChannels")
-	private List<RelayChannel> relayChannels = new ArrayList<RelayChannel>();
+	@JsonProperty("relays")
+	private List<Relay> relays = new ArrayList<Relay>();
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	/**
 	 * 
-	 * @return The id
+	 * @return The relays
 	 */
-	@JsonProperty("id")
-	public Integer getId() {
-		return id;
+	@JsonProperty("relays")
+	public List<Relay> getRelays() {
+		return relays;
 	}
 
 	/**
 	 * 
-	 * @param id The id
+	 * @param relays The relays
 	 */
-	@JsonProperty("id")
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	/**
-	 * 
-	 * @return The relayChannels
-	 */
-	@JsonProperty("relayChannels")
-	public List<RelayChannel> getRelayChannels() {
-		return relayChannels;
-	}
-
-	/**
-	 * 
-	 * @param relayChannels The relayChannels
-	 */
-	@JsonProperty("relayChannels")
-	public void setRelayChannels(List<RelayChannel> relayChannels) {
-		this.relayChannels = relayChannels;
+	@JsonProperty("relays")
+	public void setRelays(List<Relay> relays) {
+		this.relays = relays;
 	}
 
 	@JsonAnyGetter
