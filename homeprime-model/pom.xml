@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>homeprime</groupId>
 		<artifactId>homeprime-parent</artifactId>
-		<version>R1A01</version>
+		<version>R2A01</version>
 	</parent>
 	<artifactId>homeprime-model</artifactId>
 	<name>HomePrime Resource Model</name>
