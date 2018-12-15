@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import homeprime.core.exceptions.ThingException;
 import homeprime.core.properties.ThingProperties;
 import homeprime.core.utils.ThingUtils;
-import homeprime.items.relay.config.pojos.RelayBoards;
+import homeprime.items.relay.config.pojos.Relays;
 
 /**
  * Relay settings loader.
@@ -17,7 +17,7 @@ import homeprime.items.relay.config.pojos.RelayBoards;
  */
 public class RelayConfigReader {
 
-	private static String relayBoards = null;
+	private static String relays = null;
 
 	/**
 	 * Hidden constructor.
@@ -25,18 +25,17 @@ public class RelayConfigReader {
 	private RelayConfigReader() {
 	}
 
-	public static RelayBoards getRelayBoards() throws ThingException {
+	public static Relays getRelays() throws ThingException {
 
 		try {
-			if (relayBoards == null) {
-				relayBoards = ThingUtils
-						.readFile(ThingProperties.getInstance().getThingConfigPath() + "relay_board.json");
+			if (relays == null) {
+				relays = ThingUtils.readFile(ThingProperties.getInstance().getThingConfigPath() + "relays.json");
 			}
 			final ObjectMapper mapper = new ObjectMapper();
-			final RelayBoards relayBoardsPojo = mapper.readValue(relayBoards, RelayBoards.class);
-			return relayBoardsPojo;
+			final Relays relaysPojo = mapper.readValue(relays, Relays.class);
+			return relaysPojo;
 		} catch (IOException e) {
-			throw new ThingException("RelayInfo.getRelayBoards() Failed to parse relay_boards.json", e);
+			throw new ThingException("RelayInfo.getRelays() Failed to parse relay.json", e);
 		}
 	}
 
@@ -44,7 +43,7 @@ public class RelayConfigReader {
 	 * Force that next getRelayBoards method call reads configuration again.
 	 */
 	public static void resyncConfig() {
-		relayBoards = null;
+		relays = null;
 	}
 
 }

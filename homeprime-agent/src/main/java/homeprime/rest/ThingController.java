@@ -22,6 +22,22 @@ public class ThingController {
 	}
 
 	/**
+	 * Terminate Agent REST service.
+	 * 
+	 * @return 200 OK
+	 */
+	@RequestMapping("/Thing/terminate")
+	public ResponseEntity<String> terminateAgentService() {
+		ThingProperties.getInstance().setMaintenanceState(true);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+		}
+		System.exit(0);
+		return new ResponseEntity<String>("Maintenance Mode - enabled", HttpStatus.OK);
+	}
+	
+	/**
 	 * Enable maintenance mode on the thing.
 	 * 
 	 * @return 200 OK

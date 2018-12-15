@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import homeprime.core.exceptions.ThingException;
 import homeprime.core.logger.IoTLogger;
 import homeprime.core.properties.ThingProperties;
-import homeprime.items.relay.RelayChannelStateControllerFactory;
+import homeprime.items.relay.RelayStateControllerFactory;
 
 /**
  * Main class to start HomePrime Agent RESTful service.
@@ -27,7 +27,7 @@ public class StartupManager {
 		// Initialize relay related pins
 		try {
 			IoTLogger.getInstance().info("Initializing relay pins ...");
-			RelayChannelStateControllerFactory.getRelayChannelStateReader().initialize();
+			RelayStateControllerFactory.getRelayStateReader().initialize();
 		} catch (ThingException e) {
 			IoTLogger.getInstance().error("Failed to initialize relay related pins.");
 		}
