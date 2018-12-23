@@ -19,12 +19,12 @@ public class ThingProperties {
 	private static String agentConfigs = "configs/agent/";
 	private static String thingConfigPath = "configs/";
 	private static String uuid = null;
-	private static String version = "R1A12";
+	private static String version = "R2A01";
 	/**
-	 * Initial state of maintenance is set to enabled (true). Disabled once system
+	 * Initial state of maintenance is set to disabled (false). Disabled once system
 	 * starts.
 	 */
-	private static Boolean maintenanceState = true;
+	private static Boolean maintenanceState = false;
 
 	/**
 	 * Hidden Constructor
