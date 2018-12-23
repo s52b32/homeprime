@@ -3,6 +3,7 @@ package homeprime.items.relay.mock;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import homeprime.core.exceptions.ThingException;
 import homeprime.core.logger.IoTLogger;
@@ -27,8 +28,7 @@ public class RelayStateControllerImpl implements RelayStateController {
 			throw new ThingException(
 					"ERROR RelayStateControllerImpl.readState() Cannot check relay state if Relay pojo is null");
 		}
-		final int relayPin = relayData.getPin();
-		Boolean state = portStates.get(relayPin);
+		Boolean state = new Random().nextBoolean();
 
 		final RelayType relayType = relayData.getRelayType();
 		if (relayType == RelayType.NC) {
