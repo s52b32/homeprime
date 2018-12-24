@@ -50,8 +50,7 @@ public class ContactsController {
 			final List<ContactSensor> contactSensors = contactSensorsPojo.getContacts();
 			if (!contactSensors.isEmpty()) {
 				for (ContactSensor contactSensor : contactSensors) {
-					contactSensor.setAdditionalProperty("currentState",
-							ContactSensorControllerFactory.getContactSensorsReader().readContactState(contactSensor));
+					contactSensor.setState(ContactSensorControllerFactory.getContactSensorsReader().readContactState(contactSensor));
 				}
 			}
 			return new ResponseEntity<ContactSensors>(contactSensorsPojo, HttpStatus.OK);
@@ -59,7 +58,7 @@ public class ContactsController {
 		return null;
 	}
 
-	@RequestMapping("/Thing/Contact/{contactSensorId}")
+	@RequestMapping("/Thing/Contacts/{contactSensorId}")
 	public ResponseEntity<ContactSensor> getTemperatureSensorById(
 			@PathVariable(value = "contactSensorId") int contactSensorId) {
 		try {
@@ -74,7 +73,7 @@ public class ContactsController {
 		}
 	}
 
-	@RequestMapping("/Thing/Contact/{contactSensorId}/read")
+	@RequestMapping("/Thing/Contacts/{contactSensorId}/read")
 	public ResponseEntity<Boolean> getContactSensorValue(@PathVariable(value = "contactSensorId") int contactSensorId) {
 		try {
 			final ContactSensor contactSensor = findContactSensorById(contactSensorId);

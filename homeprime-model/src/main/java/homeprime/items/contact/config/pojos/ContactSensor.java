@@ -22,15 +22,15 @@ import homeprime.items.contact.config.enums.ContactType;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "id", "pin", "initialState", "name", "contactType", "status", "triggerType" })
+@JsonPropertyOrder({ "id", "pin", "state", "name", "contactType", "status", "triggerType" })
 public class ContactSensor {
 
 	@JsonProperty("id")
 	private int id;
 	@JsonProperty("pin")
 	private int pin;
-	@JsonProperty("initialState")
-	private Boolean initialState;
+	@JsonProperty("state")
+	private Boolean state;
 	@JsonProperty("name")
 	private String name;
 	@JsonProperty("contactType")
@@ -80,20 +80,20 @@ public class ContactSensor {
 
 	/**
 	 * 
-	 * @return The initialState
+	 * @return The state
 	 */
-	@JsonProperty("initialState")
-	public Boolean getInitialState() {
-		return initialState;
+	@JsonProperty("state")
+	public Boolean getState() {
+		return state;
 	}
 
 	/**
 	 * 
-	 * @param initialState The initialState
+	 * @param state The initialState
 	 */
-	@JsonProperty("initialState")
-	public void setInitialState(Boolean initialState) {
-		this.initialState = initialState;
+	@JsonProperty("state")
+	public void setState(Boolean state) {
+		this.state = state;
 	}
 
 	/**
