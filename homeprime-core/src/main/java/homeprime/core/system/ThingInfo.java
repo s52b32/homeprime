@@ -35,7 +35,7 @@ public class ThingInfo {
 	 */
 	@JsonProperty("version")
 	public String getVersion() {
-		return ThingProperties.getInstance().getThingVersion();
+		return version;
 	}
 
 	/**

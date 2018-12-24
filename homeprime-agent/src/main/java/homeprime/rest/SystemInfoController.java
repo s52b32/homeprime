@@ -42,7 +42,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Os/Name")
+	@RequestMapping("/Thing/System/OsName")
 	public ResponseEntity<String> getOSName() {
 		try {
 			return new ResponseEntity<String>(ThingSystemInfoFactory.getThingSystemInfo().getThingOsInfo().getOsName(),
@@ -53,7 +53,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Os/Version")
+	@RequestMapping("/Thing/System/OsVersion")
 	public ResponseEntity<String> getOSVersion() {
 		try {
 			return new ResponseEntity<String>(
@@ -64,7 +64,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Os/Architecture")
+	@RequestMapping("/Thing/System/OsArchitecture")
 	public ResponseEntity<String> getOSArchitecture() {
 		try {
 			return new ResponseEntity<String>(
@@ -76,7 +76,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Os/FirmwareBuild")
+	@RequestMapping("/Thing/System/OsFirmwareBuild")
 	public ResponseEntity<String> getOSFirmwareBuild() {
 		try {
 			return new ResponseEntity<String>(
@@ -88,7 +88,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Os/FirmwareDate")
+	@RequestMapping("/Thing/System/OsFirmwareDate")
 	public ResponseEntity<String> getOSFirmwareDate() {
 		try {
 			return new ResponseEntity<String>(
@@ -110,7 +110,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Memory/clear")
+	@RequestMapping("/Thing/System/clear-cache")
 	public ResponseEntity<Boolean> clearMemory() {
 		try {
 			return new ResponseEntity<Boolean>(
@@ -120,7 +120,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Memory/TotalMemory")
+	@RequestMapping("/Thing/System/TotalMemory")
 	public ResponseEntity<String> getTotalMemory() {
 		try {
 			return new ResponseEntity<String>(
@@ -132,7 +132,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Memory/FreeMemory")
+	@RequestMapping("/Thing/System/FreeMemory")
 	public ResponseEntity<String> getFreeMemory() {
 		try {
 			return new ResponseEntity<String>(
@@ -144,7 +144,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Memory/UsedMemory")
+	@RequestMapping("/Thing/System/UsedMemory")
 	public ResponseEntity<String> getUsedMemory() {
 		try {
 			return new ResponseEntity<String>(
@@ -156,7 +156,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Memory/SharedMemory")
+	@RequestMapping("/Thing/System/SharedMemory")
 	public ResponseEntity<String> getSharedMemory() {
 		try {
 			return new ResponseEntity<String>(
@@ -168,7 +168,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Memory/FreeStorageMemory")
+	@RequestMapping("/Thing/System/FreeStorageMemory")
 	public ResponseEntity<String> getFreeStorageMemory() {
 		try {
 			LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
@@ -187,7 +187,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Memory/TotalStorageMemory")
+	@RequestMapping("/Thing/System/TotalStorageMemory")
 	public ResponseEntity<String> getTotalStorageMemory() {
 		try {
 			LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
@@ -215,7 +215,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Hardware/SerialNumber")
+	@RequestMapping("/Thing/System/SerialNumber")
 	public ResponseEntity<String> getSerialNumber() {
 		try {
 			return new ResponseEntity<String>(
@@ -227,7 +227,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Hardware/BoardType")
+	@RequestMapping("/Thing/System/BoardType")
 	public ResponseEntity<String> getBoardType() {
 		try {
 			return new ResponseEntity<String>(
@@ -238,7 +238,7 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/Hardware/CpuTemperature")
+	@RequestMapping("/Thing/System/CpuTemperature")
 	public ResponseEntity<String> getCPUTemperature() {
 		try {
 			return new ResponseEntity<String>(

@@ -39,7 +39,7 @@ public class TemperatureController {
 		return new ResponseEntity<String>("Temperature config re-sync scheduled", HttpStatus.OK);
 	}
 
-	@RequestMapping("/Thing/Temperature/{temperatureSensorId}")
+	@RequestMapping("/Thing/Temperatures/{temperatureSensorId}")
 	public ResponseEntity<TemperatureSensor> getTemperatureSensorById(
 			@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {
 		try {
@@ -49,7 +49,7 @@ public class TemperatureController {
 		}
 	}
 
-	@RequestMapping("/Thing/Temperature/{temperatureSensorId}/read")
+	@RequestMapping("/Thing/Temperatures/{temperatureSensorId}/read")
 	public ResponseEntity<Float> getTemperatureSensorValue(
 			@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {
 		try {

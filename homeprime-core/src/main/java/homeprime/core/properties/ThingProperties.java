@@ -19,7 +19,6 @@ public class ThingProperties {
 	private static String agentConfigs = "configs/agent/";
 	private static String thingConfigPath = "configs/";
 	private static String uuid = null;
-	private static String version = "R2A01";
 	/**
 	 * Initial state of maintenance is set to disabled (false). Disabled once system
 	 * starts.
@@ -87,10 +86,6 @@ public class ThingProperties {
 
 	public String getAgentConfigPath() {
 		return agentConfigs;
-	}
-
-	public String getThingVersion() {
-		return version;
 	}
 
 	public Boolean getMaintenanceState() {

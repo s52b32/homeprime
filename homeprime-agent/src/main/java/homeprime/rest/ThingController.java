@@ -17,9 +17,13 @@ import homeprime.core.system.ThingInfo;
 @RestController
 public class ThingController implements ErrorController {
 
+	final String version = "%version%";
+
 	@RequestMapping("/")
 	public ThingInfo index() {
-		return new ThingInfo();
+		final ThingInfo thingInfo = new ThingInfo();
+		thingInfo.setVersion(version);
+		return thingInfo;
 	}
 
 	/**
