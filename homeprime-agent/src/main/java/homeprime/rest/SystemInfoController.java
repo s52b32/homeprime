@@ -1,12 +1,12 @@
 package homeprime.rest;
 
+import java.io.File;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import homeprime.core.commander.LocalCmdExecution;
-import homeprime.core.commander.LocalCmdExecutionFactory;
 import homeprime.core.exceptions.ThingException;
 import homeprime.system.ThingSystemInfoFactory;
 import homeprime.system.config.ThingHardwareInfo;
@@ -168,41 +168,24 @@ public class SystemInfoController {
 		}
 	}
 
-	@RequestMapping("/Thing/System/FreeStorageMemory")
+	@RequestMapping("/Thing/System/FreeDiskSpace")
 	public ResponseEntity<String> getFreeStorageMemory() {
 		try {
-			LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
-			final String storageStatus = localCmdExecution.getStorageStatus();
-			if (storageStatus != null && storageStatus.contains(":")) {
-				final String[] memoryData = storageStatus.split(":");
-				final Integer available = Integer.parseInt(memoryData[1]);
-				return new ResponseEntity<String>(available.toString(), HttpStatus.OK);
-			} else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body("Failed to get system storage available memory");
-			}
-		} catch (ThingException e) {
+				return new ResponseEntity<String>(new Long(new File("/").getFreeSpace()).toString(), HttpStatus.OK);
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("Failed to get system storage available memory. Exception occured: " + e.getMessage());
+					.body("Failed to get system free disk space. Exception occured: " + e.getMessage());
 		}
 	}
 
-	@RequestMapping("/Thing/System/TotalStorageMemory")
+	@RequestMapping("/Thing/System/TotalDiskSpace")
 	public ResponseEntity<String> getTotalStorageMemory() {
 		try {
-			LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
-			final String storageStatus = localCmdExecution.getStorageStatus();
-			if (storageStatus != null && storageStatus.contains(":")) {
-				final String[] memoryData = storageStatus.split(":");
-				final Integer available = Integer.parseInt(memoryData[0]);
-				return new ResponseEntity<String>(available.toString(), HttpStatus.OK);
-			} else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to get system storage total memory");
-			}
-		} catch (ThingException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("Failed to get system storage total memory. Exception occured: " + e.getMessage());
-		}
+			return new ResponseEntity<String>(new Long(new File("/").getTotalSpace()).toString(), HttpStatus.OK);
+	} catch (Exception e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body("Failed to get system total disk space. Exception occured: " + e.getMessage());
+	}
 	}
 
 	@RequestMapping("/Thing/System/Hardware")

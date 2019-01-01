@@ -2,6 +2,8 @@ package homeprime.system.mock;
 
 import java.util.Random;
 
+import homeprime.core.commander.LocalCmdExecution;
+import homeprime.core.commander.LocalCmdExecutionFactory;
 import homeprime.core.exceptions.ThingException;
 import homeprime.system.config.ThingMemoryInfo;
 
@@ -34,8 +36,18 @@ public class ThingMemoryInfoImpl implements ThingMemoryInfo {
 
 	@Override
 	public Boolean clearCache() throws ThingException {
-		System.out.println("Clearing memory cache");
-		return true;
+		boolean clearedFlag = false;
+		final String clearCachesCommand = "sudo echo 1 >/proc/sys/vm/drop_caches && echo TRUE || echo FALSE";
+		// TODO: This can be session
+		LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
+		final String execute = localCmdExecution.execute(clearCachesCommand);
+		if (execute != null && execute.contains("TRUE")) {
+			clearedFlag = true;
+		}
+		// put object to GC
+		localCmdExecution = null;
+		return clearedFlag;
+
 	}
 
 }

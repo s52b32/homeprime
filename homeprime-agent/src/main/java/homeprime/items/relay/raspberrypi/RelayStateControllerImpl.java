@@ -59,6 +59,10 @@ public class RelayStateControllerImpl implements RelayStateController {
 		GpioController gpio = GpioFactory.getInstance();
 		final GpioPinDigitalOutput relay = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(relayPin),
 				relayData.getName());
+		if (relayData.getRelayType() == RelayType.NC) {
+			IoTLogger.getInstance().info("Reversing relay state for NC type of relay.");
+			newState = !newState;
+		}
 		relay.setState(newState);
 		gpio.shutdown();
 		gpio.unprovisionPin(relay);
