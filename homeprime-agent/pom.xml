@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>homeprime</groupId>
 	<artifactId>homeprime-agent</artifactId>
-	<version>R2A01</version>
+	<version>R2A02</version>
 	<name>HomePrime Agent</name>
 	<description>Agent Software of HomePrime</description>
 
@@ -61,7 +61,7 @@
 				<version>1.5.1</version>
 				<executions>
 					<execution>
-						<phase>install</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>replace</goal>
 						</goals>
