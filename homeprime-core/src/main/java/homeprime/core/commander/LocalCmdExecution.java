@@ -11,8 +11,8 @@ public interface LocalCmdExecution {
 	 * Perform command.
 	 * 
 	 * @param command command to be executed
-	 * @return command response
+	 * @return command response object
 	 */
-	String execute(String command);
+	CmdResponse execute(String command);
 
 }

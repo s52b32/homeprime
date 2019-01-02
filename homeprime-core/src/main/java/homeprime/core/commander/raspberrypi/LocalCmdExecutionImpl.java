@@ -3,6 +3,7 @@ package homeprime.core.commander.raspberrypi;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import homeprime.core.commander.CmdResponse;
 import homeprime.core.commander.LocalCmdExecution;
 import homeprime.core.logger.IoTLogger;
 
@@ -16,15 +17,17 @@ public class LocalCmdExecutionImpl implements LocalCmdExecution {
 	public LocalCmdExecutionImpl() {
 	}
 
-	public synchronized final String execute(final String command) {
+	public synchronized final CmdResponse execute(final String command) {
 		return executeCommand(command);
 	}
 
-	private static String executeCommand(String command) {
+	private static CmdResponse executeCommand(String command) {
+		CmdResponse cmdResponse = null;
 		String response = null;
 		try {
 			Runtime rt = Runtime.getRuntime();
 			Process pr = rt.exec(command);
+			pr.waitFor();
 
 			BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 
@@ -34,13 +37,13 @@ public class LocalCmdExecutionImpl implements LocalCmdExecution {
 				response = response + "\n" + line;
 			}
 
-			pr.waitFor();
+			cmdResponse = new CmdResponse(response, pr.waitFor());
 
 		} catch (Exception e) {
-			IoTLogger.getInstance().error("Exception happen while executiing command: " + command);
+			IoTLogger.getInstance().error("Exception happen while executing command: " + command);
 			e.printStackTrace();
 		}
-		return response;
+		return cmdResponse;
 	}
 
 }

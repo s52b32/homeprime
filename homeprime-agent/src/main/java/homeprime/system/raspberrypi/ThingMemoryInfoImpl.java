@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.pi4j.system.SystemInfo;
 
+import homeprime.core.commander.CmdResponse;
 import homeprime.core.commander.LocalCmdExecution;
 import homeprime.core.commander.LocalCmdExecutionFactory;
 import homeprime.core.exceptions.ThingException;
@@ -71,12 +72,14 @@ public class ThingMemoryInfoImpl implements ThingMemoryInfo {
 	@Override
 	public Boolean clearCache() throws ThingException {
 		boolean clearedFlag = false;
-		final String clearCachesCommand = "sudo sh -c 'echo 1 >/proc/sys/vm/drop_caches' && echo TRUE || echo FALSE";
+		final String clearCachesCommand = "sudo echo 1 >/proc/sys/vm/drop_caches";
 		LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
-		final String execute = localCmdExecution.execute(clearCachesCommand);
-		if (execute != null && execute.contains("TRUE")) {
+		final CmdResponse cmdResponse = localCmdExecution.execute(clearCachesCommand);
+		if (cmdResponse != null && cmdResponse.getExitCode() == 0) {
 			clearedFlag = true;
 		}
+		// send to GC
+		localCmdExecution = null;
 		return clearedFlag;
 
 	}

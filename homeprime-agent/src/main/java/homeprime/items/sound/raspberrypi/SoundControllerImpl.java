@@ -1,5 +1,6 @@
 package homeprime.items.sound.raspberrypi;
 
+import homeprime.core.commander.CmdResponse;
 import homeprime.core.commander.LocalCmdExecution;
 import homeprime.core.commander.LocalCmdExecutionFactory;
 import homeprime.core.exceptions.ThingException;
@@ -26,15 +27,16 @@ public class SoundControllerImpl implements SoundController {
 	public Integer readVolume() throws ThingException {
 		Integer volumeValue = null;
 		LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
-		String volumeRead = localCmdExecution.execute("volume && echo TRUE || echo FALSE");
-		if (volumeRead != null && volumeRead.contains("TRUE")) {
-			volumeRead = volumeRead.replace("TRUE", "").trim();
+		final CmdResponse volumeRead = localCmdExecution.execute("volume && echo TRUE || echo FALSE");
+		if (volumeRead != null && volumeRead.getExitCode() == 0) {
 			try {
-				volumeValue = Integer.parseInt(volumeRead);
+				volumeValue = Integer.parseInt(volumeRead.getResponse());
 			} catch (RuntimeException e) {
 				IoTLogger.getInstance().error("Failed to parse volume value from response: " + volumeRead);
 			}
 		}
+		// send to GC
+		localCmdExecution = null;
 		return volumeValue;
 	}
 
@@ -47,10 +49,12 @@ public class SoundControllerImpl implements SoundController {
 		}
 		Boolean setVolumeSuccess = false;
 		LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
-		String volumeSet = localCmdExecution.execute("volume " + volume + " && echo TRUE || echo FALSE");
-		if (volumeSet != null && volumeSet.contains("TRUE")) {
+		final CmdResponse volumeSet = localCmdExecution.execute("volume " + volume + " && echo TRUE || echo FALSE");
+		if (volumeSet != null && volumeSet.getExitCode() == 0) {
 			setVolumeSuccess = true;
 		}
+		// send to GC
+		localCmdExecution = null;
 		return setVolumeSuccess;
 	}
 
@@ -68,10 +72,12 @@ public class SoundControllerImpl implements SoundController {
 		}
 		Boolean spokenSuccess = false;
 		LocalCmdExecution localCmdExecution = LocalCmdExecutionFactory.getLocalSession();
-		String speak = localCmdExecution.execute("speak \"" + text + "\" && echo TRUE || echo FALSE");
-		if (speak != null && speak.contains("TRUE")) {
+		final CmdResponse speak = localCmdExecution.execute("speak \"" + text + "\"");
+		if (speak != null && speak.getExitCode() == 0) {
 			spokenSuccess = true;
 		}
+		// send to GC
+		localCmdExecution = null;
 		return spokenSuccess;
 	}
 
