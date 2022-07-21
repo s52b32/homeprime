@@ -1,6 +1,6 @@
 package homeprime.items.contact;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.items.contact.config.pojos.ContactSensor;
 
 /**

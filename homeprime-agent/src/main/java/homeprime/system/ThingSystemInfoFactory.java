@@ -1,8 +1,7 @@
 package homeprime.system;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.core.properties.ThingProperties;
-import homeprime.system.config.ThingSystemInfo;
 import homeprime.system.raspberrypi.ThingSystemInfoImpl;
 
 /**

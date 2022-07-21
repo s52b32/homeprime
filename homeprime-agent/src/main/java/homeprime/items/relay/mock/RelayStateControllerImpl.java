@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.core.logger.IoTLogger;
+import homeprime.core.model.readers.items.relay.RelayConfigReader;
 import homeprime.items.relay.RelayStateController;
 import homeprime.items.relay.config.enums.RelayType;
 import homeprime.items.relay.config.pojos.Relay;
 import homeprime.items.relay.config.pojos.Relays;
-import homeprime.items.relay.config.reader.RelayConfigReader;
 
 /**
  * Manage relay channel pin state connected as mocked system.

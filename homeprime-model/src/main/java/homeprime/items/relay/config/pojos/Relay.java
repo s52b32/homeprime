@@ -19,7 +19,7 @@ import homeprime.items.relay.config.enums.RelayType;
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "id", "pin", "name", "relayType", "payloadType" })
+@JsonPropertyOrder({ "id", "pin", "name", "relayType", "payloadType", "state" })
 public class Relay {
 
 	@JsonProperty("id")
@@ -32,6 +32,8 @@ public class Relay {
 	private RelayType relayType = RelayType.NO;
 	@JsonProperty("payloadType")
 	private PayloadType payloadType = PayloadType.Unknown;
+	@JsonProperty("state")
+	private Boolean state;
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -124,6 +126,24 @@ public class Relay {
 	@JsonProperty("payloadType")
 	public void setPayloadType(PayloadType payloadType) {
 		this.payloadType = payloadType;
+	}
+	
+	/**
+	 * 
+	 * @return The state
+	 */
+	@JsonProperty("state")
+	public Boolean getState() {
+		return state;
+	}
+
+	/**
+	 * 
+	 * @param state The state
+	 */
+	@JsonProperty("state")
+	public void setState(Boolean state) {
+		this.state = state;
 	}
 
 	@JsonAnyGetter

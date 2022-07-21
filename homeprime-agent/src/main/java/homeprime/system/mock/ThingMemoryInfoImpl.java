@@ -2,8 +2,8 @@ package homeprime.system.mock;
 
 import java.util.Random;
 
-import homeprime.core.exceptions.ThingException;
-import homeprime.system.config.ThingMemoryInfo;
+import homeprime.core.exception.ThingException;
+import homeprime.system.ThingMemoryInfo;
 
 /**
  * Mocked implementation for thing memory info data retrieval.

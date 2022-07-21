@@ -1,6 +1,6 @@
 package homeprime.items.relay;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.items.relay.config.pojos.Relay;
 
 /**

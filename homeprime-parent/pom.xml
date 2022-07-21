@@ -1,29 +1,37 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>homeprime</groupId>
 	<artifactId>homeprime-parent</artifactId>
-	<version>R2A01</version>
+	<version>R6A01</version>
 	<packaging>pom</packaging>
 	<name>HomePrime Parent</name>
 	<description>A Maven parent for HomePrime projects</description>
 
 	<properties>
-		<homeprime.modules.version>R2A01</homeprime.modules.version>
-		
-		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
-		<!-- JAVA source and target version settings -->
-		<compiler.source.java.version>1.8</compiler.source.java.version>
-		<compiler.target.java.version>1.8</compiler.target.java.version>
-		<compiler.compliance.java.version>1.8</compiler.compliance.java.version>
+		<homeprime.modules.version>${project.version}</homeprime.modules.version>
+		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
+		<!-- Java 11 -->
+		<java.version>11</java.version>
+		<!-- Jersey -->
+		<jersey.version>3.1.0-M3</jersey.version>
+		<!-- SpringBoot -->
+		<spring.boot.version>2.7.1</spring.boot.version>
 	</properties>
 
 	<modules>
 		<module>homeprime-core</module>
 		<module>homeprime-model</module>
 		<module>homeprime-agent</module>
+		<module>homeprime-manager</module>
 	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
@@ -42,6 +50,33 @@
 				<artifactId>homeprime-agent</artifactId>
 				<version>${homeprime.modules.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>homeprime</groupId>
+				<artifactId>homeprime-manager</artifactId>
+				<version>${homeprime.modules.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<type>pom</type>
+				<version>${spring.boot.version}</version>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-json-jackson</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.inject</groupId>
+				<artifactId>jersey-hk2</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>1.7.36</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -52,8 +87,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
-					<source>${compiler.source.java.version}</source>
-					<target>${compiler.target.java.version}</target>
+					<release>11</release>
 				</configuration>
 			</plugin>
 		</plugins>

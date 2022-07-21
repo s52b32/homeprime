@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
+import homeprime.core.model.readers.items.temperature.TemperatureConfigReader;
 import homeprime.items.temperature.TemperatureSensorControllerFactory;
 import homeprime.items.temperature.config.pojos.TemperatureSensor;
 import homeprime.items.temperature.config.pojos.TemperatureSensors;
-import homeprime.items.temperature.config.reader.TemperatureConfigReader;
 
 /**
- * Spring REST controller for thing temperature sensors setup.
+ * Spring REST controller for thing temperature sensors.
  * 
  * @author Milan Ramljak
  * 
@@ -24,28 +24,53 @@ import homeprime.items.temperature.config.reader.TemperatureConfigReader;
 public class TemperatureController {
 
 	@RequestMapping("/Thing/Temperatures")
-	public ResponseEntity<TemperatureSensors> getTemperatureSensors() {
+	public ResponseEntity<?> getTemperatureSensors() {
+		TemperatureSensors temperatureSensors = null;
 		try {
-			return new ResponseEntity<TemperatureSensors>(TemperatureConfigReader.getTemperatureSensors(),
-					HttpStatus.OK);
-		} catch (ThingException e) {
-			return new ResponseEntity<TemperatureSensors>(HttpStatus.BAD_REQUEST);
+			temperatureSensors = TemperatureConfigReader.getTemperatureSensors();
+		} catch (ThingException e1) {
+			return new ResponseEntity<String>("No temperature sensors defined or configuration is not valid!",
+					HttpStatus.NO_CONTENT);
 		}
+
+		if (temperatureSensors != null) {
+			try {
+				final List<TemperatureSensor> temperatureSensorsList = temperatureSensors.getTemperatureSensors();
+				for (TemperatureSensor temperatureSensor : temperatureSensorsList) {
+					temperatureSensor.setValue(TemperatureSensorControllerFactory.getTemperatureSensorReader()
+							.readTemperature(temperatureSensor));
+				}
+				// update with new data
+				temperatureSensors.setTemperatureSensors(temperatureSensorsList);
+				// success
+				return new ResponseEntity<TemperatureSensors>(temperatureSensors, HttpStatus.OK);
+			} catch (ThingException e) {
+				return new ResponseEntity<String>("Failed to read temperature sensor value!",
+						HttpStatus.EXPECTATION_FAILED);
+			}
+		} else {
+			return new ResponseEntity<String>("No available temperature sensors!", HttpStatus.NO_CONTENT);
+		}
+
 	}
 
-	@RequestMapping("/Thing/Temperatures/sync")
+	@RequestMapping("/Thing/Temperatures/reload-config")
 	public ResponseEntity<String> syncTemperatureConfig() {
-		TemperatureConfigReader.resyncConfig();
-		return new ResponseEntity<String>("Temperature config re-sync scheduled", HttpStatus.OK);
+		TemperatureConfigReader.reloadConfig();
+		return new ResponseEntity<String>("Temperature config reloaded", HttpStatus.OK);
 	}
 
 	@RequestMapping("/Thing/Temperatures/{temperatureSensorId}")
-	public ResponseEntity<TemperatureSensor> getTemperatureSensorById(
+	public ResponseEntity<?> getTemperatureSensorById(
 			@PathVariable(value = "temperatureSensorId") int temperatureSensorId) {
 		try {
-			return new ResponseEntity<TemperatureSensor>(findTemperatureSensorById(temperatureSensorId), HttpStatus.OK);
+			final TemperatureSensor findTemperatureSensorById = findTemperatureSensorById(temperatureSensorId);
+			findTemperatureSensorById.setValue(TemperatureSensorControllerFactory.getTemperatureSensorReader()
+					.readTemperature(findTemperatureSensorById));
+			// success
+			return new ResponseEntity<TemperatureSensor>(findTemperatureSensorById, HttpStatus.OK);
 		} catch (ThingException e) {
-			return new ResponseEntity<TemperatureSensor>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Failed to get temperature sensor value!", HttpStatus.BAD_REQUEST);
 		}
 	}
 

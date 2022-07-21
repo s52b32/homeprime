@@ -7,7 +7,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.items.temperature.TemperatureSensorController;
 import homeprime.items.temperature.config.pojos.TemperatureSensor;
 

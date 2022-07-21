@@ -1,99 +1,104 @@
 package homeprime.core.properties;
 
-import java.io.File;
-import java.io.IOException;
-
-import homeprime.core.logger.IoTLogger;
-import homeprime.core.system.config.enums.ThingSystemType;
+import homeprime.agent.config.enums.SystemType;
+import homeprime.core.enums.AppMode;
 import homeprime.core.utils.ThingUtils;
 
 /**
  * Properties holder for HomePrime agent integration.
- * 
+ *
  * @author Milan Ramljak
  */
 public class ThingProperties {
 
-	private static ThingSystemType thingSystemType = ThingSystemType.RaspberryPi;
-	private static ThingProperties instance;
-	private static String agentConfigs = "configs/agent/";
-	private static String thingConfigPath = "configs/";
-	private static String uuid = null;
-	/**
-	 * Initial state of maintenance is set to disabled (false). Disabled once system
-	 * starts.
-	 */
-	private static Boolean maintenanceState = false;
+    // default application type is agent
+    private static AppMode APP_MODE = AppMode.Agent;
+    // default agent rest port is 8081
+    public static int DEFAULT_REST_PORT = 8081;
+    // default agent rest port is 8081
+    public static int DEFAULT_REST_PORT_MANAGER = 8082;
+    // relative path (default) where images are stored
+    public static final String APP_ROOT_PATH = "/usr/local/HomePrime/";
+    public static final String APP_ROOT_PATH_MANAGER = "/usr/local/HomePrimeManager/";
+    private static SystemType thingSystemType = SystemType.RaspberryPi;
+    private static ThingProperties instance;
+    // service name of agent
+    public static final String SERVICE_NAME = "homeprime";
+    // service name of manager
+    public static final String SERVICE_NAME_MANAGER = "homeprime-manager";
 
-	/**
-	 * Hidden Constructor
-	 */
-	private ThingProperties() {
-		// Hidden Constructor
-	}
+    /**
+     * Initial state of maintenance is set to disabled (false). Disabled once system
+     * starts.
+     */
+    private static Boolean maintenanceState = false;
 
-	public static ThingProperties getInstance() {
-		if (instance == null) {
-			instance = new ThingProperties();
-			thingSystemType = ThingUtils.detectThingSystemType();
-		}
-		return instance;
-	}
+    /**
+     * Hidden Constructor
+     */
+    private ThingProperties() {
+        // Hidden Constructor
+    }
 
-	/**
-	 * Check if file exists and is not directory.
-	 * 
-	 * @param filePath full path to file
-	 * @return {@code true} if file exists, otherwise {@code false}
-	 */
-	public String getThingUuid() {
-		if (uuid != null) {
-			return uuid;
-		}
-		final File f = new File(thingConfigPath + "thing.uuid");
-		if (f.exists() && !f.isDirectory()) {
-			String uuid = null;
-			try {
-				uuid = ThingUtils.readFile(thingConfigPath + "thing.uuid");
-			} catch (IOException e) {
-				IoTLogger.getInstance().error("ThingProperties.getThingUuid() Failed to read thing UUID from file");
-			}
-			if (uuid != null) {
-				return uuid.trim();
-			} else {
-				IoTLogger.getInstance().info(
-						"ThingProperties.getThingUuid() Thing UUID definition file shouln't be empty, proceeding with creation ...");
-				ThingProperties.uuid = ThingUtils.generateThingUuid();
-			}
-		} else {
-			IoTLogger.getInstance()
-					.info("ThingProperties.getThingUuid() Thing UUID doesn't exist, proceeding with creation ...");
-			ThingProperties.uuid = ThingUtils.generateThingUuid();
-		}
-		return uuid;
-	}
+    public static ThingProperties getInstance() {
+        if (instance == null) {
+            instance = new ThingProperties();
+        }
+        return instance;
+    }
 
-	/**
-	 * @return thing system type detected on running machine
-	 */
-	public ThingSystemType getThingSystemType() {
-		return thingSystemType;
-	}
+    /**
+     * @return thing system type detected on running machine
+     */
+    public SystemType getThingSystemType() {
+        thingSystemType = ThingUtils.detectThingSystemType();
+        return thingSystemType;
+    }
 
-	public String getThingConfigPath() {
-		return thingConfigPath;
-	}
+    public Boolean getMaintenanceState() {
+        return maintenanceState;
+    }
 
-	public String getAgentConfigPath() {
-		return agentConfigs;
-	}
+    public void setMaintenanceState(Boolean maintenanceState) {
+        ThingProperties.maintenanceState = maintenanceState;
+    }
 
-	public Boolean getMaintenanceState() {
-		return maintenanceState;
-	}
+    public AppMode getAppMode() {
+        return APP_MODE;
+    }
 
-	public void setMaintenanceState(Boolean maintenanceState) {
-		ThingProperties.maintenanceState = maintenanceState;
-	}
+    public void setAppMode(AppMode appMode) {
+        ThingProperties.APP_MODE = appMode;
+    }
+
+    public String getAppRootPath() {
+        if (ThingProperties.APP_MODE == AppMode.Manager) {
+            return APP_ROOT_PATH_MANAGER;
+        }
+        return APP_ROOT_PATH;
+    }
+
+    public String getConfigsRootPath() {
+        return getAppRootPath() + "configs/";
+    }
+
+    public String getBackupsRootPath() {
+        return getAppRootPath() + "backups/";
+    }
+
+    public String getItemsRootPath() {
+        return getConfigsRootPath() + "items/";
+    }
+
+    public String getSslRootPath() {
+        return getConfigsRootPath() + "ssl/";
+    }
+
+    public int getDefaultRestPort() {
+        if (ThingProperties.APP_MODE == AppMode.Manager) {
+            return DEFAULT_REST_PORT_MANAGER;
+        }
+        return DEFAULT_REST_PORT;
+    }
 
 }

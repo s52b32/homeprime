@@ -1,7 +1,7 @@
 package homeprime.system.beagleboneblack;
 
-import homeprime.core.exceptions.ThingException;
-import homeprime.system.config.ThingHardwareInfo;
+import homeprime.core.exception.ThingException;
+import homeprime.system.ThingHardwareInfo;
 
 /**
  * Default implementation for thing hardware info data retrieval on

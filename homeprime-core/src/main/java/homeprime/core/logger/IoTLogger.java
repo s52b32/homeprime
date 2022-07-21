@@ -1,41 +1,85 @@
 package homeprime.core.logger;
 
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
+import homeprime.agent.config.enums.LoggerType;
+import homeprime.core.exception.ThingException;
+import homeprime.core.model.readers.config.ConfigurationReader;
 
 /**
  * Main logger.
- * 
+ *
  * @author Milan Ramljak
- * 
+ *
  */
 public class IoTLogger {
 
-	private Logger logger = Logger.getLogger(IoTLogger.class);
-	private static IoTLogger instance = null;
+    private static IoTLogger instance = null;
+    private static LoggerType activeLoggerType = LoggerType.Void;
 
-	/**
-	 * 
-	 * Hidden constructor.
-	 */
-	private IoTLogger() {
-	}
+    /**
+     *
+     * Hidden constructor.
+     */
+    private IoTLogger() {
+    }
 
-	public static IoTLogger getInstance() {
-		if (instance == null) {
-			instance = new IoTLogger();
-		}
-		return instance;
-	}
+    private void writeToLog(final String loggerFilePath, final String logEntry) throws IOException {
 
-	public void info(final String message) {
-		logger.info(message);
-	}
+        Path path = Paths.get(loggerFilePath);
+        byte[] strToBytes = (logEntry + "\n").getBytes();
 
-	public void error(final String message) {
-		logger.error(message);
-	}
+        Files.write(path, strToBytes, StandardOpenOption.APPEND);
+    }
 
-	public void warn(final String message) {
-		logger.warn(message);
-	}
+    public static IoTLogger getInstance() {
+        if (instance == null) {
+            instance = new IoTLogger();
+            try {
+                activeLoggerType = ConfigurationReader.getConfiguration().getAgent().getLoggerType();
+            } catch (ThingException e) {
+                System.err.println("IoTLogger.getInstance() Failed to read active logger type!");
+            }
+        }
+        return instance;
+    }
+
+    private void log(final String logLevel, final String log) {
+        switch (activeLoggerType) {
+            case File:
+                try {
+                    writeToLog(ConfigurationReader.getConfiguration().getAgent().getLoggerFilePath(),
+                            logLevel + " " + log);
+                } catch (IOException e) {
+                    System.err.println("IoTLogger.log() Failed to write to log file!");
+                } catch (ThingException e) {
+                    System.err.println("IoTLogger.log() Failed to read logger file type!");
+                }
+                break;
+            case Standard:
+                System.out.println(logLevel + " " + log);
+                break;
+            case Void:
+                // Do not log anything
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void info(final String message) {
+        log("INFO", message);
+    }
+
+    public void error(final String message) {
+        log("ERROR", message);
+    }
+
+    public void warn(final String message) {
+        log("WARN", message);
+    }
 }

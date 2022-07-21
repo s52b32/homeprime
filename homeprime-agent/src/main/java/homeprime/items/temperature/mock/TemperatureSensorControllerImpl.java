@@ -2,7 +2,7 @@ package homeprime.items.temperature.mock;
 
 import java.io.IOException;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.core.utils.ThingUtils;
 import homeprime.items.temperature.TemperatureSensorController;
 import homeprime.items.temperature.config.pojos.TemperatureSensor;

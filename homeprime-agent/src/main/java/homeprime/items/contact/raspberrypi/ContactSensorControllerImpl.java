@@ -3,7 +3,7 @@ package homeprime.items.contact.raspberrypi;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.wiringpi.Gpio;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.core.logger.IoTLogger;
 import homeprime.items.contact.ContactSensorController;
 import homeprime.items.contact.config.pojos.ContactSensor;

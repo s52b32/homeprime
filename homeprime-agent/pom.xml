@@ -2,33 +2,24 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>homeprime</groupId>
 	<artifactId>homeprime-agent</artifactId>
-	<version>R2A02</version>
 	<name>HomePrime Agent</name>
 	<description>Agent Software of HomePrime</description>
 
 	<properties>
-		<com.pi4j.version>1.2-SNAPSHOT</com.pi4j.version>
-		<org.springframework.boot.version>1.3.5.RELEASE</org.springframework.boot.version>
+		<com.pi4j.version>1.4</com.pi4j.version>
 	</properties>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.5.RELEASE</version>
-	</parent>
+        <groupId>homeprime</groupId>
+        <artifactId>homeprime-parent</artifactId>
+        <version>R6A01</version>
+    </parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>homeprime</groupId>
 			<artifactId>homeprime-core</artifactId>
-			<version>R2A01</version>
-		</dependency>
-		<dependency>
-			<groupId>homeprime</groupId>
-			<artifactId>homeprime-model</artifactId>
-			<version>R2A01</version>
 		</dependency>
 		<dependency>
 			<groupId>com.pi4j</groupId>
@@ -38,7 +29,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${org.springframework.boot.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>logback-classic</artifactId>
@@ -51,17 +41,26 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${org.springframework.boot.version}</version>
-			</plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>homeprime.manager.rest.StartupManager</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
 				<artifactId>replacer</artifactId>
 				<version>1.5.1</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>test</phase>
 						<goals>
 							<goal>replace</goal>
 						</goals>
@@ -69,13 +68,12 @@
 				</executions>
 				<configuration>
 					<includes>
-						<include>src/main/resources/banner.txt</include>
 						<include>src/main/java/homeprime/rest/ThingController.java</include>
 					</includes>
 					<replacements>
 						<replacement>
-							<token>%version%</token>
-							<value>${project.version}</value>
+							<token>setVersion\(".*"\)</token>
+							<value>setVersion("${project.version}")</value>
 						</replacement>
 					</replacements>
 				</configuration>

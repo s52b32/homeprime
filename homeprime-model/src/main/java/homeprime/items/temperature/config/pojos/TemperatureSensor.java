@@ -25,6 +25,8 @@ public class TemperatureSensor {
 	private String i2cAddress;
 	@JsonProperty("name")
 	private String name;
+	@JsonProperty("value")
+	private Float value;
 	@JsonProperty("sensorType")
 	private TemperatureSensorType sensorType;
 	@JsonProperty("sensorValueType")
@@ -102,6 +104,24 @@ public class TemperatureSensor {
 	@JsonProperty("name")
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * 
+	 * @return The value
+	 */
+	@JsonProperty("value")
+	public Float getValue() {
+		return value;
+	}
+
+	/**
+	 * 
+	 * @param value temperature sensor reading value
+	 */
+	@JsonProperty("value")
+	public void setValue(Float value) {
+		this.value = value;
 	}
 
 	/**

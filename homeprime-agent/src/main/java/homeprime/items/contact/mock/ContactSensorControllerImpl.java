@@ -2,7 +2,7 @@ package homeprime.items.contact.mock;
 
 import java.util.Random;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.core.logger.IoTLogger;
 import homeprime.items.contact.ContactSensorController;
 import homeprime.items.contact.config.pojos.ContactSensor;

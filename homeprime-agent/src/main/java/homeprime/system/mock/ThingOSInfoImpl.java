@@ -1,7 +1,7 @@
 package homeprime.system.mock;
 
-import homeprime.core.exceptions.ThingException;
-import homeprime.system.config.ThingOsInfo;
+import homeprime.core.exception.ThingException;
+import homeprime.system.ThingOsInfo;
 
 /**
  * Mocked implementation for thing OS info data retrieval.

@@ -1,6 +1,6 @@
 package homeprime.items.contact;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.core.properties.ThingProperties;
 import homeprime.items.contact.raspberrypi.ContactSensorControllerImpl;
 

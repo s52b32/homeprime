@@ -1,6 +1,6 @@
 package homeprime.items.temperature;
 
-import homeprime.core.exceptions.ThingException;
+import homeprime.core.exception.ThingException;
 import homeprime.items.temperature.config.pojos.TemperatureSensor;
 
 /**
@@ -17,6 +17,6 @@ public interface TemperatureSensorController {
 	 * @param temperatureSensorData temperature sensor data
 	 * @return temperature from sensor
 	 */
-	public float readTemperature(TemperatureSensor temperatureSensorData) throws ThingException;
+	float readTemperature(TemperatureSensor temperatureSensorData) throws ThingException;
 
 }
