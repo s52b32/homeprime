@@ -3,17 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>homeprime-agent</artifactId>
+	<version>${homeprime.modules.version}</version>
 	<name>HomePrime Agent</name>
 	<description>Agent Software of HomePrime</description>
-
-	<properties>
-		<com.pi4j.version>1.4</com.pi4j.version>
-	</properties>
 
 	<parent>
         <groupId>homeprime</groupId>
         <artifactId>homeprime-parent</artifactId>
-        <version>R6A01</version>
+        <version>R6A</version>
     </parent>
 
 	<dependencies>
@@ -44,7 +41,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>homeprime.manager.rest.StartupManager</mainClass>
+                    <mainClass>homeprime.rest.StartupManager</mainClass>
                 </configuration>
                 <executions>
                     <execution>

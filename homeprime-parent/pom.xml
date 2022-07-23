@@ -3,13 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>homeprime</groupId>
 	<artifactId>homeprime-parent</artifactId>
-	<version>R6A01</version>
+	<version>R6A</version>
 	<packaging>pom</packaging>
 	<name>HomePrime Parent</name>
 	<description>A Maven parent for HomePrime projects</description>
 
 	<properties>
-		<homeprime.modules.version>${project.version}</homeprime.modules.version>
+		<homeprime.modules.version>R6A10</homeprime.modules.version>
+		<com.pi4j.version>1.4</com.pi4j.version>
 		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
 		<!-- Java 11 -->
 		<java.version>11</java.version>

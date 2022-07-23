@@ -2,13 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>homeprime-manager</artifactId>
+	<version>${homeprime.modules.version}</version>
 	<name>HomePrime Control Manager</name>
 	<description>Control multiple HomePrime things</description>
 
 	<parent>
 		<groupId>homeprime</groupId>
 		<artifactId>homeprime-parent</artifactId>
-		<version>R6A01</version>
+		<version>R6A</version>
 	</parent>
 
 	<dependencies>
