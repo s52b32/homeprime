@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import homeprime.core.exception.ThingException;
+import homeprime.core.logger.IoTLogger;
 import homeprime.core.model.readers.items.contact.ContactsConfigReader;
 import homeprime.items.contact.ContactSensorControllerFactory;
 import homeprime.items.contact.config.pojos.ContactSensor;
@@ -31,45 +32,47 @@ public class ContactsController {
 
     @RequestMapping("/Thing/Contacts")
     public ResponseEntity<ContactSensors> getContactSensorsOverview() throws ThingException {
-        ContactSensors contactSensorsPojo = null;
-        try {
-            contactSensorsPojo = ContactsConfigReader.getContactSensors();
-        } catch (ThingException e) {
-            throw new ThingException("ERROR Cannot read contacts configuration.", e);
-        }
-        if (contactSensorsPojo != null) {
-            final List<ContactSensor> contactSensors = contactSensorsPojo.getContacts();
-            if (!contactSensors.isEmpty()) {
-                for (ContactSensor contactSensor : contactSensors) {
-                    contactSensor.setState(
-                            ContactSensorControllerFactory.getContactSensorsReader().readContactState(contactSensor));
-                }
-            }
-            return new ResponseEntity<ContactSensors>(contactSensorsPojo, HttpStatus.OK);
-        }
-        return null;
+        ContactSensors contactSensorsPojo = new ContactSensors();
+        return new ResponseEntity<ContactSensors>(contactSensorsPojo, HttpStatus.OK);
+        // try {
+        // contactSensorsPojo = ContactsConfigReader.getContactSensors();
+        // } catch (ThingException e) {
+        // throw new ThingException("ERROR Cannot read contacts configuration.", e);
+        // }
+        // if (contactSensorsPojo != null) {
+        // final List<ContactSensor> contactSensors = contactSensorsPojo.getContacts();
+        // if (!contactSensors.isEmpty()) {
+        // for (ContactSensor contactSensor : contactSensors) {
+        // contactSensor.setState(
+        // ContactSensorControllerFactory.getContactSensorsReader().readContactState(contactSensor));
+        // }
+        // }
+        // return new ResponseEntity<ContactSensors>(contactSensorsPojo, HttpStatus.OK);
+        // }
+        // return null;
     }
 
     // TODO: remove and sync in binding
     @RequestMapping("/Thing/Contacts/overview")
     public ResponseEntity<ContactSensors> getContactSensorsOverviewLegacy() throws ThingException {
-        ContactSensors contactSensorsPojo = null;
-        try {
-            contactSensorsPojo = ContactsConfigReader.getContactSensors();
-        } catch (ThingException e) {
-            throw new ThingException("ERROR Cannot read contacts configuration.", e);
-        }
-        if (contactSensorsPojo != null) {
-            final List<ContactSensor> contactSensors = contactSensorsPojo.getContacts();
-            if (!contactSensors.isEmpty()) {
-                for (ContactSensor contactSensor : contactSensors) {
-                    contactSensor.setState(
-                            ContactSensorControllerFactory.getContactSensorsReader().readContactState(contactSensor));
-                }
-            }
-            return new ResponseEntity<ContactSensors>(contactSensorsPojo, HttpStatus.OK);
-        }
-        return null;
+        ContactSensors contactSensorsPojo = new ContactSensors();
+        return new ResponseEntity<ContactSensors>(contactSensorsPojo, HttpStatus.OK);
+        // try {
+        // contactSensorsPojo = ContactsConfigReader.getContactSensors();
+        // } catch (ThingException e) {
+        // throw new ThingException("ERROR Cannot read contacts configuration.", e);
+        // }
+        // if (contactSensorsPojo != null) {
+        // final List<ContactSensor> contactSensors = contactSensorsPojo.getContacts();
+        // if (!contactSensors.isEmpty()) {
+        // for (ContactSensor contactSensor : contactSensors) {
+        // contactSensor.setState(
+        // ContactSensorControllerFactory.getContactSensorsReader().readContactState(contactSensor));
+        // }
+        // }
+        // return new ResponseEntity<ContactSensors>(contactSensorsPojo, HttpStatus.OK);
+        // }
+        // return null;
     }
 
     @RequestMapping("/Thing/Contacts/{contactSensorId}")
@@ -95,6 +98,7 @@ public class ContactsController {
         try {
             final ContactSensor contactSensor = findContactSensorById(contactSensorId);
             if (contactSensor != null) {
+                IoTLogger.getInstance().info("Get contact state by id");
                 // success
                 return new ResponseEntity<String>(getContactSensorState(
                         ContactSensorControllerFactory.getContactSensorsReader().readContactState(contactSensor)),

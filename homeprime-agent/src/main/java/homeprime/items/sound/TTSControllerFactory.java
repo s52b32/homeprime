@@ -17,6 +17,12 @@ public class TTSControllerFactory {
     private TTSControllerFactory() {
     }
 
+    /**
+     * Construct TTS controller implementation object based on system type.
+     *
+     * @return implementing class
+     * @throws ThingException
+     */
     public static TTSController getTTSController() throws ThingException {
         switch (ThingProperties.getInstance().getThingSystemType()) {
             case RaspberryPi:

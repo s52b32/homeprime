@@ -5,7 +5,7 @@ import homeprime.items.sound.SoundController;
 import homeprime.items.sound.raspberrypi.StreamingControllerImpl;
 
 /**
- * Implementation of sound control for moced thing.
+ * Implementation of sound control for MOCKed thing.
  *
  * @author Milan Ramljak
  */

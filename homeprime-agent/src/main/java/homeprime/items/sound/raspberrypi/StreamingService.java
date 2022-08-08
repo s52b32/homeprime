@@ -14,6 +14,11 @@ public class StreamingService extends Thread {
     private String streamUrl = null;
     private boolean isStreaming = false;
 
+    /**
+     * Constructor for service based on provided stream URL.
+     *
+     * @param streamUrl URL to stream from.
+     */
     public StreamingService(String streamUrl) {
         this.streamUrl = streamUrl;
     }

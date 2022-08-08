@@ -20,9 +20,11 @@ import homeprime.core.properties.ThingProperties;
 @RestController
 public class ThingController {
 
+    public static String agentRevision = "R7A06";
+
     @RequestMapping("/")
     public String index() {
-        return "HomePrime Agent";
+        return "HomePrime Agent " + agentRevision;
     }
 
     @RequestMapping("/Thing")
@@ -31,7 +33,7 @@ public class ThingController {
         try {
             thingConfiguration = ConfigurationReader.getConfiguration();
             // set version based on project version
-            thingConfiguration.setVersion("R5A06");
+            thingConfiguration.setVersion(agentRevision);
         } catch (ThingException e) {
         }
         return thingConfiguration;

@@ -16,6 +16,11 @@ public class TTSControllerImpl implements TTSController {
 
     private static TTSControllerImpl singleton = null;
 
+    /**
+     * Singleton. Only one instance can exist.
+     *
+     * @return implementation object
+     */
     public static TTSControllerImpl getInstance() throws ThingException {
         if (singleton == null) {
             singleton = new TTSControllerImpl();

@@ -11,7 +11,7 @@ import homeprime.core.exception.ThingException;
 public interface StreamingController {
 
     /**
-     * Start stream play..
+     * Start stream play.
      *
      * @return {@code true} if successful
      * @throws ThingException in case of error while playing stream

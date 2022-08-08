@@ -1,10 +1,15 @@
 package homeprime.core.model.readers.items.temperature;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import homeprime.core.exception.ThingException;
+import homeprime.core.logger.IoTLogger;
 import homeprime.core.properties.ThingProperties;
 import homeprime.core.utils.ThingUtils;
+import homeprime.items.temperature.config.pojos.TemperatureSensor;
 import homeprime.items.temperature.config.pojos.TemperatureSensors;
 
 /**
@@ -47,6 +52,26 @@ public class TemperatureConfigReader {
      */
     public static void reloadConfig() {
         tempSensors = null;
+    }
+
+    /**
+     * Get list of all temperature sensors.
+     * 
+     * @return
+     */
+    public static List<TemperatureSensor> getTemperatureSesorList() {
+        final List<TemperatureSensor> tempSensorList = new ArrayList<TemperatureSensor>();
+        TemperatureSensors tempSensorsPojo = null;
+        try {
+            tempSensorsPojo = getTemperatureSensors();
+        } catch (ThingException e) {
+            IoTLogger.getInstance().error("ERROR Cannot read temperature sensors configuration.");
+        }
+        if (tempSensorsPojo != null) {
+            tempSensorList.addAll(tempSensorsPojo.getTemperatureSensors());
+        }
+        return tempSensorList;
+
     }
 
 }

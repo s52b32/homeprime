@@ -19,7 +19,7 @@ import homeprime.core.model.readers.config.ConfigurationReader;
 public class IoTLogger {
 
     private static IoTLogger instance = null;
-    private static LoggerType activeLoggerType = LoggerType.Void;
+    private static LoggerType activeLoggerType = LoggerType.Standard;
 
     /**
      *
@@ -81,5 +81,9 @@ public class IoTLogger {
 
     public void warn(final String message) {
         log("WARN", message);
+    }
+
+    public void debug(final String message) {
+        log("DEBUG", message);
     }
 }

@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>homeprime</groupId>
 	<artifactId>homeprime-parent</artifactId>
-	<version>R6A</version>
+	<version>R7A</version>
 	<packaging>pom</packaging>
 	<name>HomePrime Parent</name>
 	<description>A Maven parent for HomePrime projects</description>
 
 	<properties>
-		<homeprime.modules.version>R6A10</homeprime.modules.version>
+		<homeprime.modules.version>R7A06</homeprime.modules.version>
 		<com.pi4j.version>1.4</com.pi4j.version>
 		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
 		<!-- Java 11 -->
@@ -62,6 +62,11 @@
 				<type>pom</type>
 				<version>${spring.boot.version}</version>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<artifactId>jersey-common</artifactId>
+				<groupId>org.glassfish.jersey.core</groupId>
+				<version>${jersey.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish.jersey.media</groupId>

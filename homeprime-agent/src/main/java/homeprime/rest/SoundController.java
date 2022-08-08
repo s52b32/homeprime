@@ -1,16 +1,24 @@
 package homeprime.rest;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import homeprime.core.exception.ThingException;
+import homeprime.core.logger.IoTLogger;
 import homeprime.core.model.readers.items.sound.SoundConfigReader;
+import homeprime.core.properties.ThingProperties;
+import homeprime.core.utils.ThingUtils;
 import homeprime.items.sound.SoundControllerFactory;
 import homeprime.items.sound.config.pojos.Sound;
 import homeprime.items.sound.config.pojos.Stream;
@@ -90,6 +98,47 @@ public class SoundController {
         return new ResponseEntity<List<Stream>>(streams, HttpStatus.OK);
     }
 
+    /**
+     * REST endpoint to update thing sound configuration in configuration file.
+     *
+     * @param sound sound JSON object
+     * @return 202 ACCEPTED for success or 409 CONFLICT for failed try
+     */
+    @PostMapping("/Thing/Sound/update")
+    public ResponseEntity<?> updateSound(@RequestPart(required = true) Sound sound) {
+        boolean updateSoundConfiguration = updateSoundConfiguration(sound);
+        if (updateSoundConfiguration) {
+            return new ResponseEntity<String>("Thing sound configuration updated", HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<String>("Failed to write new sound configuration", HttpStatus.CONFLICT);
+    }
+
+    /**
+     * REST endpoint to update thing sound streams configuration in configuration file.
+     *
+     * @param streams list of stream JSON objects
+     * @return 202 ACCEPTED for success or 409 CONFLICT for failed try
+     */
+    @PostMapping("/Thing/Sound/Stream/update")
+    public ResponseEntity<?> updateSoundStreams(@RequestPart(required = true) List<Stream> streams) {
+        boolean updateSoundConfiguration = updateStreamsConfiguration(streams);
+        if (updateSoundConfiguration) {
+            return new ResponseEntity<String>("Thing sound configuration updated", HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<String>("Failed to write new sound configuration", HttpStatus.CONFLICT);
+    }
+
+    /**
+     * REST endpoint to reload thing sound configuration from file.
+     *
+     * @return
+     */
+    @RequestMapping(value = "/Thing/Sound/reload-config", method = RequestMethod.GET)
+    public ResponseEntity<String> syncSoundConfig() {
+        SoundConfigReader.reloadConfig();
+        return new ResponseEntity<String>("Thing sound config re-sync scheduled", HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/Thing/Sound/Stream/{streamId}/play")
     public ResponseEntity<String> streamPlay(@PathVariable(value = "streamId") int streamId) {
         try {
@@ -131,6 +180,69 @@ public class SoundController {
         } catch (ThingException e) {
             return new ResponseEntity<String>("Failed to stop stream", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * Helper method to perform update of thing sound configuration and write it to file.
+     *
+     * @param sound sound JSON object
+     * @return
+     */
+    private boolean updateSoundConfiguration(Sound sound) {
+        // update file only if it exists
+        if (ThingUtils.fileExists(
+                ThingProperties.getInstance().getConfigsRootPath() + SoundConfigReader.SOUND_CONFIGURATION_FILE_NAME)) {
+            // read thing configuration
+            try {
+                // now write updated configuration to file
+                final ObjectMapper mapper = new ObjectMapper();
+                // make it nicely formatted
+                mapper.writerWithDefaultPrettyPrinter();
+                mapper.writeValue(new File(ThingProperties.getInstance().getItemsRootPath()
+                        + SoundConfigReader.SOUND_CONFIGURATION_FILE_NAME), sound);
+                // at this point indicate success
+                return true;
+            } catch (Exception e) {
+                IoTLogger.getInstance().error("Failed to write to sound configuration file "
+                        + SoundConfigReader.SOUND_CONFIGURATION_FILE_NAME);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Helper method to perform update of thing sound streams configuration and write it to file.
+     *
+     * @param soundStreams list of stream
+     * @return
+     */
+    private boolean updateStreamsConfiguration(List<Stream> soundStreams) {
+        // update file only if it exists
+        if (ThingUtils.fileExists(
+                ThingProperties.getInstance().getItemsRootPath() + SoundConfigReader.SOUND_CONFIGURATION_FILE_NAME)) {
+            // read thing sound configuration
+            try {
+                final Sound thingSoundConfiguration = SoundConfigReader.getSound();
+                // update stream list section
+                thingSoundConfiguration.setStreams(soundStreams);
+                // now write updated configuration to file
+                final ObjectMapper mapper = new ObjectMapper();
+                // make it nicely formatted
+                mapper.writerWithDefaultPrettyPrinter();
+                mapper.writeValue(new File(ThingProperties.getInstance().getItemsRootPath()
+                        + SoundConfigReader.SOUND_CONFIGURATION_FILE_NAME), thingSoundConfiguration);
+                // at this point indicate success
+                return true;
+            } catch (ThingException e) {
+                IoTLogger.getInstance().error("Failed to read agent/thing sound configuration file "
+                        + SoundConfigReader.SOUND_CONFIGURATION_FILE_NAME);
+
+            } catch (Exception e) {
+                IoTLogger.getInstance().error("Failed to write to sound configuration file "
+                        + SoundConfigReader.SOUND_CONFIGURATION_FILE_NAME);
+            }
+        }
+        return false;
     }
 
 }

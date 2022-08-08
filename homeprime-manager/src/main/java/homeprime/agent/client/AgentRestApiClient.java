@@ -1,34 +1,25 @@
 package homeprime.agent.client;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import homeprime.agent.config.pojos.Thing;
-import homeprime.file.FileUtils;
+import homeprime.core.logger.IoTLogger;
 import homeprime.file.pojos.DownloadData;
 import homeprime.file.pojos.UploadData;
 import homeprime.image.pojos.Image;
@@ -36,32 +27,28 @@ import homeprime.image.pojos.Images;
 import homeprime.system.ThingSystemInfo;
 
 /**
- * REST API client for communication with HomePrime Agent.
+ * REST API client for communication with HomePrime agent.
  *
  * @author Milan Ramljak
  *
  */
 public class AgentRestApiClient {
 
-    private static Logger logger = LoggerFactory.getLogger(AgentRestApiClient.class);
-
     /**
-     * Check REST is available, meaning that Thing is live.
+     * Check REST is available, meaning that OpenHAB is running.
      *
-     * @return true if thing is live
+     * @return true if openHAB is live
      */
     public static Boolean isThingAlive(Thing thing) {
         final String index = "/";
-        final WebTarget webTarget = buildTargetUrl(thing, index);
-        final Invocation.Builder invocationBuilder = webTarget.request();
 
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200) {
+            if (performGet(thing, index).getResponseCode() == 200) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("Failed to perform root REST request " + agentInfo(thing) + " " + e.getMessage());
+            IoTLogger.getInstance()
+                    .error("Failed to perform root REST request " + agentInfo(thing) + " " + e.getMessage());
         }
         return false;
     }
@@ -73,24 +60,22 @@ public class AgentRestApiClient {
      */
     public static boolean readMaintenanceState(Thing thing) {
         final String thingMaintenanceReadCmd = "/Thing/Maintenance/read";
-        final WebTarget webTarget = buildTargetUrl(thing, thingMaintenanceReadCmd);
-        final Invocation.Builder invocationBuilder = webTarget.request();
 
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200 && response.readEntity(String.class).contains("true")) {
+            final HttpResponse response = performGet(thing, thingMaintenanceReadCmd);
+            if (response.getResponseCode() == 200 && response.getResponseBody().contains("true")) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("Failed to perform maintenance mode read request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform maintenance mode read request " + agentInfo(thing));
         }
         return false;
     }
 
     /**
-     * Check REST is available, meaning that Thing is live.
+     * Set maintenance mode on thing.
      *
-     * @return true if thing is live
+     * @return true if thing if operation was successful
      */
     public static Boolean setMaintenanceMode(Thing thing, boolean state) {
         String operation = "off";
@@ -100,16 +85,13 @@ public class AgentRestApiClient {
         }
         final String thingMaintenanceModeSetCmd = "/Thing/Maintenance/" + operation;
 
-        final WebTarget webTarget = buildTargetUrl(thing, thingMaintenanceModeSetCmd);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200) {
+            final HttpResponse response = performGet(thing, thingMaintenanceModeSetCmd);
+            if (response.getResponseCode() == 200) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("Failed to perform maintenance mode set request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform maintenance mode set request " + agentInfo(thing));
         }
         return false;
     }
@@ -122,19 +104,14 @@ public class AgentRestApiClient {
     public static Thing getThingConfiguration(Thing thing) {
         final String index = "/Thing";
 
-        final WebTarget webTarget = buildTargetUrl(thing, index);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200) {
-                final String output = response.readEntity(String.class);
+            final HttpResponse response = performGet(thing, index);
+            if (response.getResponseCode() == 200) {
                 final ObjectMapper mapper = new ObjectMapper();
-                return mapper.readValue(output, Thing.class);
+                return mapper.readValue(response.getResponseBody(), Thing.class);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("Failed to perform agent get configuration request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform agent get configuration request " + agentInfo(thing));
         }
         return null;
     }
@@ -147,18 +124,13 @@ public class AgentRestApiClient {
     public static String getThingSystemInfo(Thing thing) {
         final String index = "/Thing/System";
 
-        final WebTarget webTarget = buildTargetUrl(thing, index);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200) {
-                final String output = response.readEntity(String.class);
-                return output;
+            final HttpResponse response = performGet(thing, index);
+            if (response.getResponseCode() == 200) {
+                return response.getResponseBody();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("Failed to perform agent get configuration request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform agent get configuration request " + agentInfo(thing));
         }
         return null;
     }
@@ -171,16 +143,13 @@ public class AgentRestApiClient {
     public static Boolean performServiceRestart(Thing thing) {
         final String thingServiceRestartSetCmd = "/Thing/restart";
 
-        final WebTarget webTarget = buildTargetUrl(thing, thingServiceRestartSetCmd);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200 || !isThingAlive(thing)) {
+            final HttpResponse response = performGet(thing, thingServiceRestartSetCmd);
+            if (response.getResponseCode() == 200 || !isThingAlive(thing)) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("Failed to perform agent service restart request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform agent service restart request " + agentInfo(thing));
         }
         return false;
     }
@@ -193,16 +162,13 @@ public class AgentRestApiClient {
     public static Boolean performSystemReboot(Thing thing) {
         final String thingServiceRestartSetCmd = "/Thing/reboot";
 
-        final WebTarget webTarget = buildTargetUrl(thing, thingServiceRestartSetCmd);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200) {
+            final HttpResponse response = performGet(thing, thingServiceRestartSetCmd);
+            if (response.getResponseCode() == 200) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("Failed to perform agent system reboot request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform agent system reboot request " + agentInfo(thing));
         }
         return false;
     }
@@ -215,16 +181,36 @@ public class AgentRestApiClient {
     public static Boolean performAppTermination(Thing thing) {
         final String thingServiceRestartSetCmd = "/Thing/terminate";
 
-        final WebTarget webTarget = buildTargetUrl(thing, thingServiceRestartSetCmd);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200) {
+            final HttpResponse response = performGet(thing, thingServiceRestartSetCmd);
+            if (response.getResponseCode() == 200) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("Failed to perform agent applciation terminate request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform agent applciation terminate request " + agentInfo(thing));
+        }
+        return false;
+    }
+
+    /**
+     * Set active image.
+     *
+     * @return true if image was set to active successfully.
+     */
+    public static Boolean setActiveImage(Thing thing, Image image) {
+        final String setActiveCmd = "/Images/set-active";
+
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            final HttpResponse response = performPost(thing, setActiveCmd, mapper.writeValueAsString(image));
+            if (response.getResponseCode() == 200) {
+                return true;
+            } else if (response.getResponseCode() == 404) {
+                // indicates that image does not exist
+                return null;
+            }
+        } catch (Exception e) {
+            IoTLogger.getInstance().error("Failed to perform agent set active image request " + agentInfo(thing));
         }
         return false;
     }
@@ -236,101 +222,95 @@ public class AgentRestApiClient {
      */
     public static Boolean upload(Thing thing, File file, UploadData uploadData) {
         boolean result = false;
+        int responseCode = 0;
         final String thingUploadCmd = "/Images/upload";
-        final WebTarget webTarget = buildTargetMultipartFeatureUrl(thing, thingUploadCmd);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-        final FileDataBodyPart filePart = new FileDataBodyPart("file", file);
-        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-        FormDataMultiPart multipart;
-        if (uploadData == null) {
-            multipart = (FormDataMultiPart) formDataMultiPart.bodyPart(filePart);
-        } else {
-            final ObjectMapper mapper = new ObjectMapper();
-            String uploadDataString = "{}";
-            try {
-                uploadDataString = mapper.writeValueAsString(uploadData);
-            } catch (JsonProcessingException e1) {
-            }
-            multipart = (FormDataMultiPart) formDataMultiPart
-                    .field("uploadData", uploadDataString, MediaType.APPLICATION_JSON_TYPE).bodyPart(filePart);
-        }
-        try {
-            final Response response = invocationBuilder.post(Entity.entity(multipart, multipart.getMediaType()));
-            if (response.getStatus() == 200) {
-                result = true;
-            }
-            formDataMultiPart.close();
-            multipart.close();
+        String charset = "UTF-8";
+        String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
 
-        } catch (Exception e) {
-            logger.error("Failed to perform agent image upload request " + agentInfo(thing));
+        try {
+            URLConnection connection = new URL(buildBaseUrl(thing) + thingUploadCmd).openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            OutputStream output = connection.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
+
+            // Send binary file.
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"" + file.getName() + "\"")
+                    .append(CRLF);
+            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(file.getName())).append(CRLF);
+            writer.append("Content-Transfer-Encoding: binary").append(CRLF);
+            writer.append(CRLF).flush();
+            // copy binary to stream
+            Files.copy(file.toPath(), output);
+            // add body part
+            final ObjectMapper mapper = new ObjectMapper();
+            try {
+                output.write(mapper.writeValueAsString(uploadData).getBytes());
+            } catch (JsonProcessingException e1) {
+                // empty data
+                output.write("{}".getBytes());
+            }
+            output.flush(); // Important before continuing with writer!
+            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+
+            // End of multipart/form-data.
+            writer.append("--" + boundary + "--").append(CRLF).flush();
+            // execute request
+            responseCode = ((HttpURLConnection) connection).getResponseCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (responseCode == 200) {
+            result = true;
         }
         return result;
     }
 
     public static boolean download(Thing thing, DownloadData downloadData) {
-        boolean downloadResult = false;
+        boolean downloadResult = true;
         final String thingConfigBackupCmd = "/Configs/backup";
-        final WebTarget webTarget = buildTargetUrl(thing, thingConfigBackupCmd);
-        // expected format is ZIP
-        Response resp = webTarget.request("application/zip").get();
-
-        if (resp.getStatus() == Response.Status.OK.getStatusCode()) {
-            if (FileUtils.checkCreateDirectory(downloadData.getDestinationPath())) {
-                InputStream is = resp.readEntity(InputStream.class);
-                downloadResult = saveFileFromStream(is, downloadData);
-                IOUtils.closeQuietly(is);
+        try {
+            URL url = new URL(buildBaseUrl(thing) + thingConfigBackupCmd);
+            BufferedInputStream bis = new BufferedInputStream(url.openStream());
+            FileOutputStream fis = new FileOutputStream(downloadData.getAbsoluteFilePath());
+            byte[] buffer = new byte[1024];
+            int count = 0;
+            while ((count = bis.read(buffer, 0, 1024)) != -1) {
+                fis.write(buffer, 0, count);
             }
-        } else {
-            throw new WebApplicationException("Http Call failed. response code is" + resp.getStatus()
-                    + ". Error reported is" + resp.getStatusInfo());
+            fis.close();
+            bis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            downloadResult = false;
         }
+
         return downloadResult;
     }
 
     public static boolean downloadActiveImage(Thing thing, DownloadData downloadData) {
-        boolean downloadResult = false;
+        boolean downloadResult = true;
         final String thingImageDownloadCmd = "/Images/download";
-        final WebTarget webTarget = buildTargetUrl(thing, thingImageDownloadCmd);
-        // expected format is ZIP
-        Response resp = webTarget.request("application/zip").get();
-
-        if (resp.getStatus() == Response.Status.OK.getStatusCode()) {
-            if (FileUtils.checkCreateDirectory(downloadData.getDestinationPath())) {
-                InputStream is = resp.readEntity(InputStream.class);
-                downloadResult = saveFileFromStream(is, downloadData);
-                IOUtils.closeQuietly(is);
+        try {
+            URL url = new URL(buildBaseUrl(thing) + thingImageDownloadCmd);
+            BufferedInputStream bis = new BufferedInputStream(url.openStream());
+            FileOutputStream fis = new FileOutputStream(downloadData.getAbsoluteFilePath());
+            byte[] buffer = new byte[1024];
+            int count = 0;
+            while ((count = bis.read(buffer, 0, 1024)) != -1) {
+                fis.write(buffer, 0, count);
             }
-        } else {
-            throw new WebApplicationException("Http Call failed. response code is" + resp.getStatus()
-                    + ". Error reported is" + resp.getStatusInfo());
+            fis.close();
+            bis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            downloadResult = false;
         }
         return downloadResult;
-    }
-
-    /**
-     * Set active image.
-     *
-     * @return true if image was set to active successfully.
-     */
-    public static Boolean setActiveImage(Thing thing, Image image) {
-        final String setActiveCmd = "/Images/set-active";
-        final WebTarget webTarget = buildTargetUrl(thing, setActiveCmd);
-        final Invocation.Builder invocationBuilder = webTarget.request();
-
-        try {
-            final Response response = invocationBuilder.post(Entity.entity(image, MediaType.APPLICATION_JSON));
-            if (response.getStatus() == 200) {
-                return true;
-            } else if (response.getStatus() == 404) {
-                // indicates that image does not exist
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("Failed to perform agent set active image request " + agentInfo(thing));
-        }
-        return false;
     }
 
     /**
@@ -339,17 +319,13 @@ public class AgentRestApiClient {
      * @return {@link Image} if valid.
      */
     public static Image getActiveImage(Thing thing) {
-        final String index = "/Images";
-
-        final WebTarget webTarget = buildTargetUrl(thing, index);
-        final Invocation.Builder invocationBuilder = webTarget.request();
+        final String imagesBase = "/Images";
 
         try {
-            final Response response = invocationBuilder.get();
-            if (response.getStatus() == 200) {
-                final String output = response.readEntity(String.class);
+            final HttpResponse response = performGet(thing, imagesBase);
+            if (response.getResponseCode() == 200) {
                 final ObjectMapper mapper = new ObjectMapper();
-                final Images images = mapper.readValue(output, Images.class);
+                final Images images = mapper.readValue(response.getResponseBody(), Images.class);
                 for (Image image : images.getImages()) {
                     if (image.getActive()) {
                         return image;
@@ -357,7 +333,7 @@ public class AgentRestApiClient {
                 }
             }
         } catch (Exception e) {
-            logger.error("Failed to perform agent get active image request " + agentInfo(thing));
+            IoTLogger.getInstance().error("Failed to perform agent get active image request " + agentInfo(thing));
         }
         return null;
     }
@@ -381,54 +357,61 @@ public class AgentRestApiClient {
      * @param thing
      * @return
      */
-    private static String buildThingBaseUrl(Thing thing) {
+    private static String buildBaseUrl(Thing thing) {
         return getHttpProtocol(thing) + "://" + thing.getAgent().getIp() + ":" + thing.getAgent().getPort();
     }
 
-    private static WebTarget buildTargetUrl(Thing thing, String cmdPath) {
-        Client client = trustAllCertificates();
-        WebTarget webTarget = client.target(buildThingBaseUrl(thing) + cmdPath);
-        return webTarget;
-    }
-
-    private static WebTarget buildTargetMultipartFeatureUrl(Thing thing, String cmdPath) {
-        final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
-        WebTarget webTarget = client.target(buildThingBaseUrl(thing) + cmdPath);
-        return webTarget;
-    }
-
-    /**
-     * Instantiate Jersey REST client object which trusts all end points, regardless of validity of certificate.
-     *
-     * @return {@link Client}
-     */
-    private static Client trustAllCertificates() {
-        Client client;
+    private static HttpResponse performGet(Thing thing, String cmdPath) {
+        HttpResponse response = null;
         try {
-            client = new ClientWithSSL().initClient(null);
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            client = ClientBuilder.newClient();
-        }
-        return client;
 
-    }
+            final URL url = new URL(buildBaseUrl(thing) + cmdPath);
+            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
 
-    /**
-     * Store contents of file from stream to file. If file with same name already exists, replace it.
-     *
-     * @param inputStream
-     * @param downloadData
-     * @return {@code true} if file is saved successfully otherwise {@code false}
-     */
-    private static boolean saveFileFromStream(InputStream inputStream, DownloadData downloadData) {
-        final File downloadfile = new File(downloadData.getAbsoluteFilePath());
-        try {
-            Files.copy(inputStream, downloadfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            int responseCode = conn.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            IoTLogger.getInstance().debug("GET path:" + cmdPath + " response: " + responseCode);
+            conn.disconnect();
+            response = new HttpResponse(responseCode, content.toString());
+        } catch (MalformedURLException e) {
+            IoTLogger.getInstance().error("Failed to perform HTTP GET request: " + e.getMessage());
         } catch (IOException e) {
-            return false;
+            IoTLogger.getInstance().error("Failed to perform HTTP GET request: " + e.getMessage());
         }
-        return true;
+        return response;
+    }
+
+    private static HttpResponse performPost(Thing thing, String cmdPath, String input) {
+        HttpResponse response = null;
+        try {
+
+            final URL url = new URL(buildBaseUrl(thing) + cmdPath);
+            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+
+            final OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            int responseCode = conn.getResponseCode();
+            IoTLogger.getInstance().debug("POST path:" + cmdPath + " input: " + input + " response: " + responseCode);
+            conn.disconnect();
+            response = new HttpResponse(responseCode, null);
+        } catch (MalformedURLException e) {
+            IoTLogger.getInstance().error("Failed to perform HTTP GET request: " + e.getMessage());
+        } catch (IOException e) {
+            IoTLogger.getInstance().error("Failed to perform HTTP GET request: " + e.getMessage());
+        }
+        return response;
     }
 
     /**

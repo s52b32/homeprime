@@ -10,7 +10,7 @@
 	<parent>
         <groupId>homeprime</groupId>
         <artifactId>homeprime-parent</artifactId>
-        <version>R6A</version>
+        <version>R7A</version>
     </parent>
 
 	<dependencies>
@@ -69,8 +69,9 @@
 					</includes>
 					<replacements>
 						<replacement>
-							<token>setVersion\(".*"\)</token>
-							<value>setVersion("${project.version}")</value>
+							<!-- public static String agentRevision = "R5A07"; -->
+                            <token>agentRevision = ".*"</token>
+                            <value>agentRevision = "${project.version}"</value>
 						</replacement>
 					</replacements>
 				</configuration>

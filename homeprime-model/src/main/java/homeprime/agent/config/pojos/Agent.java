@@ -15,7 +15,7 @@ import homeprime.agent.config.enums.LoggerType;
 import homeprime.agent.config.enums.SystemType;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "type", "ip", "port", "mode", "ssl", "loggerType", "loggerFilePath" })
+@JsonPropertyOrder({ "type", "ip", "port", "ssl", "loggerType", "loggerFilePath" })
 public class Agent {
 
     @JsonProperty("type")
@@ -24,8 +24,6 @@ public class Agent {
     private String ip = "127.0.0.1";
     @JsonProperty("port")
     private Integer port = 8081;
-    @JsonProperty("mode")
-    private String mode = "PULL";
     @JsonProperty("ssl")
     private Ssl ssl;
     @JsonProperty("loggerType")
@@ -63,16 +61,6 @@ public class Agent {
     @JsonProperty("port")
     public void setPort(Integer port) {
         this.port = port;
-    }
-
-    @JsonProperty("mode")
-    public String getMode() {
-        return mode;
-    }
-
-    @JsonProperty("mode")
-    public void setMode(String mode) {
-        this.mode = mode;
     }
 
     @JsonProperty("ssl")

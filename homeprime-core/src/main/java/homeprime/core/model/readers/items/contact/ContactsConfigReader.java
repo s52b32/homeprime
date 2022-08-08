@@ -1,12 +1,16 @@
 package homeprime.core.model.readers.items.contact;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import homeprime.core.exception.ThingException;
+import homeprime.core.logger.IoTLogger;
 import homeprime.core.properties.ThingProperties;
 import homeprime.core.utils.ThingUtils;
+import homeprime.items.contact.config.pojos.ContactSensor;
 import homeprime.items.contact.config.pojos.ContactSensors;
 
 /**
@@ -49,6 +53,25 @@ public class ContactsConfigReader {
      */
     public static void reloadConfig() {
         contactSensors = null;
+    }
+
+    /**
+     * Get list of contact sensors.
+     *
+     * @return list of contact sensors or empty list if no contacts or exception.
+     */
+    public static List<ContactSensor> getContacts() {
+        final List<ContactSensor> contacts = new ArrayList<ContactSensor>();
+        ContactSensors contactSensorsPojo = null;
+        try {
+            contactSensorsPojo = getContactSensors();
+        } catch (ThingException e) {
+            IoTLogger.getInstance().error("ERROR Cannot read contacts configuration.");
+        }
+        if (contactSensorsPojo != null) {
+            contacts.addAll(contactSensorsPojo.getContacts());
+        }
+        return contacts;
     }
 
 }

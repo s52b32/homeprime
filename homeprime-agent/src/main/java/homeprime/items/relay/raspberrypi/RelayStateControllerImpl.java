@@ -47,30 +47,20 @@ public class RelayStateControllerImpl implements RelayStateController {
 
     @Override
     public void toggleState(Relay relayData) throws ThingException {
-        final int relayPin = relayData.getPin();
-        GpioController gpio = GpioFactory.getInstance();
-        final GpioPinDigitalOutput relay = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(relayPin),
-                relayData.getName());
+        final GpioPinDigitalOutput relay = getOrProvisionGpio(GpioFactory.getInstance(), relayData);
         relay.toggle();
-        gpio.shutdown();
-        gpio.unprovisionPin(relay);
         IoTLogger.getInstance().info("Toggling current state of relay: " + relayData.getName());
     }
 
     @Override
     public void setState(Relay relayData, boolean newState) throws ThingException {
-        final int relayPin = relayData.getPin();
-        GpioController gpio = GpioFactory.getInstance();
-        final GpioPinDigitalOutput relay = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(relayPin),
-                relayData.getName());
+        final GpioPinDigitalOutput relay = getOrProvisionGpio(GpioFactory.getInstance(), relayData);
         if (relayData.getRelayType() == RelayType.NC) {
             IoTLogger.getInstance().info("Reversing relay state for NC type of relay.");
             relay.setState(!newState);
         } else {
             relay.setState(newState);
         }
-        gpio.shutdown();
-        gpio.unprovisionPin(relay);
         IoTLogger.getInstance().info("State of relay: " + relayData.getName() + "("
                 + relayData.getRelayType().toString() + ")" + " set to " + newState);
     }
@@ -97,13 +87,8 @@ public class RelayStateControllerImpl implements RelayStateController {
      * @param newState  state to set
      */
     private void setStateAsIs(Relay relayData, boolean newState) {
-        final int relayPin = relayData.getPin();
-        GpioController gpio = GpioFactory.getInstance();
-        final GpioPinDigitalOutput relay = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(relayPin),
-                relayData.getName());
+        final GpioPinDigitalOutput relay = getOrProvisionGpio(GpioFactory.getInstance(), relayData);
         relay.setState(newState);
-        gpio.shutdown();
-        gpio.unprovisionPin(relay);
         IoTLogger.getInstance().info("State of relay: " + relayData.getName() + "("
                 + relayData.getRelayType().toString() + ")" + " set to " + newState);
     }
@@ -119,6 +104,21 @@ public class RelayStateControllerImpl implements RelayStateController {
         GpioFactory.getInstance();
         Gpio.pinMode(pinAddress, Gpio.OUTPUT);
         return Gpio.digitalRead(pinAddress) == 0;
+    }
+
+    /**
+     * Helper method to check and return already provision GPIO pin or provision it and then return.
+     *
+     * @param gpio
+     * @param relay
+     * @return {@code GpioPinDigitalOutput} object of provisioned GPIO pin
+     */
+    public static GpioPinDigitalOutput getOrProvisionGpio(GpioController gpio, Relay relay) {
+        if (gpio.getProvisionedPin(RaspiPin.getPinByAddress(relay.getPin())) != null) {
+            return (GpioPinDigitalOutput) gpio.getProvisionedPin(RaspiPin.getPinByAddress(relay.getPin()));
+        } else {
+            return gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(relay.getPin()));
+        }
     }
 
 }

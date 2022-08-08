@@ -9,21 +9,13 @@
 	<parent>
 		<groupId>homeprime</groupId>
 		<artifactId>homeprime-parent</artifactId>
-		<version>R6A</version>
+		<version>R7A</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>homeprime</groupId>
 			<artifactId>homeprime-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-multipart</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

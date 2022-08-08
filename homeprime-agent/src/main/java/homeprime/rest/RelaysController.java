@@ -27,12 +27,22 @@ import homeprime.items.relay.config.pojos.Relays;
 @RestController
 public class RelaysController {
 
+    /**
+     * REST endpint to reload relay configuration from file.
+     * 
+     * @return
+     */
     @RequestMapping(value = "/Thing/Relays/reload-config", method = RequestMethod.GET)
     public ResponseEntity<String> syncRelayConfig() {
         RelayConfigReader.reloadConfig();
         return new ResponseEntity<String>("Relay config re-sync scheduled", HttpStatus.OK);
     }
 
+    /**
+     * REST endpoint to show all relays configuration.
+     *
+     * @return
+     */
     @RequestMapping(value = "/Thing/Relays", method = RequestMethod.GET)
     public ResponseEntity<Relays> getRelayOverview() {
         Relays relays = null;
@@ -54,6 +64,12 @@ public class RelaysController {
         return new ResponseEntity<Relays>(relays, HttpStatus.OK);
     }
 
+    /**
+     * REST endpoint to show relay configuration.
+     *
+     * @param relayId id of relay in relay configuration file
+     * @return
+     */
     @RequestMapping(value = "/Thing/Relays/{relayId}", method = RequestMethod.POST)
     public ResponseEntity<?> getRelayById(@PathVariable(value = "relayId") int relayId,
             @RequestBody String relayOperation) {
@@ -101,6 +117,12 @@ public class RelaysController {
         }
     }
 
+    /**
+     * REST endpoint to power ON relay.
+     *
+     * @param relayId id of relay in relay configuration file
+     * @return
+     */
     @RequestMapping(value = "/Thing/Relays/{relayId}/on")
     public ResponseEntity<?> relaySetOn(@PathVariable(value = "relayId") int relayId) {
 
@@ -118,6 +140,12 @@ public class RelaysController {
         }
     }
 
+    /**
+     * REST endpoint to power OFF relay.
+     *
+     * @param relayId id of relay in relay configuration file
+     * @return
+     */
     @RequestMapping(value = "/Thing/Relays/{relayId}/off")
     public ResponseEntity<?> relaySetOff(@PathVariable(value = "relayId") int relayId) {
 
@@ -135,6 +163,35 @@ public class RelaysController {
         }
     }
 
+    /**
+     * REST endpoint to toggle relay state.
+     *
+     * @param relayId id of relay in relay configuration file
+     * @return
+     */
+    @RequestMapping(value = "/Thing/Relays/{relayId}/toggle")
+    public ResponseEntity<?> relayToggle(@PathVariable(value = "relayId") int relayId) {
+
+        try {
+            Relay relay = findRelayById(relayId);
+            if (relay == null) {
+                return new ResponseEntity<String>(
+                        "Relay with provided is (" + relayId + ") doesn't exist in running configuration!",
+                        HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<Boolean>(toggleRelayState(relay), HttpStatus.OK);
+
+        } catch (ThingException e) {
+            return new ResponseEntity<String>("Exception happen while changing relay state!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * REST endpoint to read relay state by relay id.
+     *
+     * @param relayId id of relay in relay configuration file.
+     * @return
+     */
     @RequestMapping(value = "/Thing/Relays/{relayId}/read")
     public ResponseEntity<?> relayReadState(@PathVariable(value = "relayId") int relayId) {
 
@@ -153,6 +210,13 @@ public class RelaysController {
         }
     }
 
+    /**
+     * Toggle (alter) relay state.
+     *
+     * @param relay relay data pojo
+     * @return {@code true} if operation was successful otherwise {@code false}
+     * @throws ThingException in case of issues with relay power operation on system.
+     */
     public Boolean toggleRelayState(Relay relay) throws ThingException {
         if (relay != null) {
             RelayStateControllerFactory.getRelayStateReader().toggleState(relay);
@@ -162,6 +226,13 @@ public class RelaysController {
         }
     }
 
+    /**
+     * Power ON relay.
+     *
+     * @param relay relay data pojo
+     * @return {@code true} if operation was successful otherwise {@code false}
+     * @throws ThingException in case of issues with relay power operation on system.
+     */
     public Boolean powerOnRelay(Relay relay) throws ThingException {
         if (relay != null) {
             RelayStateControllerFactory.getRelayStateReader().setState(relay, false);
@@ -172,6 +243,13 @@ public class RelaysController {
 
     }
 
+    /**
+     * Power OFF relay.
+     *
+     * @param relay relay data pojo
+     * @return {@code true} if operation was successful otherwise {@code false}
+     * @throws ThingException in case of issues with relay power operation on system.
+     */
     public Boolean powerOffRelay(Relay relay) throws ThingException {
         if (relay != null) {
             RelayStateControllerFactory.getRelayStateReader().setState(relay, true);

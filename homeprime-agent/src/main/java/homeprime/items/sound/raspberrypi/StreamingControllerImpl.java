@@ -29,24 +29,16 @@ public class StreamingControllerImpl implements StreamingController {
         // Hidden Constructor
     }
 
+    /**
+     * Singleton. Only one instance can exist.
+     *
+     * @return implementation object
+     */
     public static StreamingControllerImpl getInstance() {
         if (instance == null) {
             instance = new StreamingControllerImpl();
         }
         return instance;
-    }
-
-    private Stream getStream(int streamId) throws ThingException {
-        final Sound sound = SoundConfigReader.getSound();
-        Stream stream = null;
-        if (sound != null) {
-            for (Stream streamE : sound.getStreams()) {
-                if (streamE.getId() == streamId) {
-                    return streamE;
-                }
-            }
-        }
-        return stream;
     }
 
     @Override
@@ -108,6 +100,26 @@ public class StreamingControllerImpl implements StreamingController {
             IoTLogger.getInstance().warn("Streaming already stopped!");
         }
         return result;
+    }
+
+    /**
+     * Helper method to get stream JSON object by certain stream id.
+     *
+     * @param streamId id of stream in configuration file.
+     * @return JSON object of sound.
+     * @throws ThingException
+     */
+    private Stream getStream(int streamId) throws ThingException {
+        final Sound sound = SoundConfigReader.getSound();
+        Stream stream = null;
+        if (sound != null) {
+            for (Stream streamE : sound.getStreams()) {
+                if (streamE.getId() == streamId) {
+                    return streamE;
+                }
+            }
+        }
+        return stream;
     }
 
 }

@@ -22,23 +22,17 @@ public class SoundControllerImpl implements SoundController {
 
     private static SoundControllerImpl singleton = null;
 
+    /**
+     * Singleton. Only one instance can exist.
+     *
+     * @return implementation object
+     * @throws ThingException
+     */
     public static SoundControllerImpl getInstance() throws ThingException {
         if (singleton == null) {
             singleton = new SoundControllerImpl();
         }
         return singleton;
-    }
-
-    private Speaker getActiveSpeaker() throws ThingException {
-        final Sound sound = SoundConfigReader.getSound();
-        if (sound != null) {
-            for (Speaker speaker : sound.getSpeakers()) {
-                if (speaker.getIsActive()) {
-                    return speaker;
-                }
-            }
-        }
-        return null;
     }
 
     @Override
@@ -101,6 +95,24 @@ public class SoundControllerImpl implements SoundController {
     @Override
     public StreamingControllerImpl stream() throws ThingException {
         return StreamingControllerImpl.getInstance();
+    }
+
+    /**
+     * Helper method to get active speaker object.
+     *
+     * @return JSON object of active speaker
+     * @throws ThingException in case of failures reading sound configuration JSON file.
+     */
+    private Speaker getActiveSpeaker() throws ThingException {
+        final Sound sound = SoundConfigReader.getSound();
+        if (sound != null) {
+            for (Speaker speaker : sound.getSpeakers()) {
+                if (speaker.getIsActive()) {
+                    return speaker;
+                }
+            }
+        }
+        return null;
     }
 
 }

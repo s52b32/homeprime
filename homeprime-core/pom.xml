@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>homeprime</groupId>
 		<artifactId>homeprime-parent</artifactId>
-		<version>R6A</version>
+		<version>R7A</version>
 	</parent>
 
 	<dependencies>

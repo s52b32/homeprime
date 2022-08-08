@@ -86,7 +86,7 @@ public class ConfigurationReader {
     /**
      * Force that next getThingInfo method call reads configuration again.
      */
-    public static void resyncConfig() {
+    public static void reloadConfig() {
         thingConfigurationPojo = null;
     }
 
