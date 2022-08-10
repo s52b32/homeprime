@@ -1,0 +1,1126 @@
+---
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8085
+  description: Generated server url
+paths:
+  "/Thing/TTS/speak":
+    post:
+      tags:
+      - tts-controller
+      operationId: speak
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Sound/update":
+    post:
+      tags:
+      - sound-controller
+      operationId: updateSound
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - sound
+              type: object
+              properties:
+                sound:
+                  "$ref": "#/components/schemas/Sound"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Sound/Stream/update":
+    post:
+      tags:
+      - sound-controller
+      operationId: updateSoundStreams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - streams
+              type: object
+              properties:
+                streams:
+                  type: array
+                  items:
+                    "$ref": "#/components/schemas/Stream"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Relays/{relayId}":
+    post:
+      tags:
+      - relays-controller
+      operationId: getRelayById
+      parameters:
+      - name: relayId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Management/update":
+    post:
+      tags:
+      - management-controller
+      operationId: updateManagement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - management
+              type: object
+              properties:
+                management:
+                  "$ref": "#/components/schemas/Management"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Images/upload":
+    post:
+      tags:
+      - images-controller
+      operationId: uploadFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                uploadData:
+                  "$ref": "#/components/schemas/UploadData"
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Images/set-active":
+    post:
+      tags:
+      - images-controller
+      operationId: setActiveImage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Image"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/":
+    get:
+      tags:
+      - thing-controller
+      operationId: index
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing":
+    get:
+      tags:
+      - thing-controller
+      operationId: thing
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/Thing"
+  "/Thing/terminate":
+    get:
+      tags:
+      - thing-controller
+      operationId: terminate
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/restart":
+    get:
+      tags:
+      - thing-controller
+      operationId: restart
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/reboot":
+    get:
+      tags:
+      - thing-controller
+      operationId: reboot
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Temperatures":
+    get:
+      tags:
+      - temperature-controller
+      operationId: getTemperatureSensors
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Temperatures/{temperatureSensorId}":
+    get:
+      tags:
+      - temperature-controller
+      operationId: getTemperatureSensorById
+      parameters:
+      - name: temperatureSensorId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Temperatures/{temperatureSensorId}/read":
+    get:
+      tags:
+      - temperature-controller
+      operationId: getTemperatureSensorValue
+      parameters:
+      - name: temperatureSensorId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: number
+                format: float
+  "/Thing/Temperatures/reload-config":
+    get:
+      tags:
+      - temperature-controller
+      operationId: syncTemperatureConfig
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/TTS":
+    get:
+      tags:
+      - tts-controller
+      operationId: getTTSOverview
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/TtsConfigs"
+  "/Thing/System":
+    get:
+      tags:
+      - system-info-controller
+      operationId: getSystemInfo
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/ThingSystemInfo"
+  "/Thing/System/clear-cache":
+    get:
+      tags:
+      - system-info-controller
+      operationId: clearMemory
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: boolean
+  "/Thing/System/UsedMemory":
+    get:
+      tags:
+      - system-info-controller
+      operationId: getSystemUsedMemory
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/System/TotalMemory":
+    get:
+      tags:
+      - system-info-controller
+      operationId: getSystemTotalMemory
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/System/TotalDiskSpace":
+    get:
+      tags:
+      - system-info-controller
+      operationId: getTotalDiskSpace
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/System/FreeDiskSpace":
+    get:
+      tags:
+      - system-info-controller
+      operationId: getFreeDiskSpace
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/System/CpuTemperature":
+    get:
+      tags:
+      - system-info-controller
+      operationId: getSystemCpuTemperature
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Sound":
+    get:
+      tags:
+      - sound-controller
+      operationId: getSoundOverview
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/Sound"
+  "/Thing/Sound/reload-config":
+    get:
+      tags:
+      - sound-controller
+      operationId: syncSoundConfig
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Sound/Volume/set-{volume}":
+    get:
+      tags:
+      - sound-controller
+      operationId: setVolume
+      parameters:
+      - name: volume
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Sound/Volume/read":
+    get:
+      tags:
+      - sound-controller
+      operationId: getVolume
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Sound/Stream":
+    get:
+      tags:
+      - sound-controller
+      operationId: getStreamOverview
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Stream"
+  "/Thing/Sound/Stream/{streamId}/play":
+    get:
+      tags:
+      - sound-controller
+      operationId: streamPlay
+      parameters:
+      - name: streamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Sound/Stream/stop":
+    get:
+      tags:
+      - sound-controller
+      operationId: streamStop
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Sound/Stream/read":
+    get:
+      tags:
+      - sound-controller
+      operationId: isStreamPlaying
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Relays":
+    get:
+      tags:
+      - relays-controller
+      operationId: getRelayOverview
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/Relays"
+  "/Thing/Relays/{relayId}/toggle":
+    get:
+      tags:
+      - relays-controller
+      operationId: relayToggle
+      parameters:
+      - name: relayId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Relays/{relayId}/read":
+    get:
+      tags:
+      - relays-controller
+      operationId: relayReadState
+      parameters:
+      - name: relayId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Relays/{relayId}/on":
+    get:
+      tags:
+      - relays-controller
+      operationId: relaySetOn
+      parameters:
+      - name: relayId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Relays/{relayId}/off":
+    get:
+      tags:
+      - relays-controller
+      operationId: relaySetOff
+      parameters:
+      - name: relayId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Relays/reload-config":
+    get:
+      tags:
+      - relays-controller
+      operationId: syncRelayConfig
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Management":
+    get:
+      tags:
+      - management-controller
+      operationId: getManagement
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/Management"
+  "/Thing/Management/sync":
+    get:
+      tags:
+      - management-controller
+      operationId: syncAgentAndManagementApp
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Management/reload-config":
+    get:
+      tags:
+      - management-controller
+      operationId: syncThingConfig
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Management/de-activate":
+    get:
+      tags:
+      - management-controller
+      operationId: deactivateManagementMode
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Management/activate":
+    get:
+      tags:
+      - management-controller
+      operationId: activateManagementMode
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Maintenance/read":
+    get:
+      tags:
+      - thing-controller
+      operationId: getThingMaintenaceState
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Maintenance/on":
+    get:
+      tags:
+      - thing-controller
+      operationId: enableThingMaintenace
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Maintenance/off":
+    get:
+      tags:
+      - thing-controller
+      operationId: disableThingMaintenace
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Contacts":
+    get:
+      tags:
+      - contacts-controller
+      operationId: getContactSensorsOverview
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/ContactSensors"
+  "/Thing/Contacts/{contactSensorId}":
+    get:
+      tags:
+      - contacts-controller
+      operationId: getContactSensorById
+      parameters:
+      - name: contactSensorId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Thing/Contacts/{contactSensorId}/read":
+    get:
+      tags:
+      - contacts-controller
+      operationId: getContactSensorReadById
+      parameters:
+      - name: contactSensorId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Contacts/reload-config":
+    get:
+      tags:
+      - contacts-controller
+      operationId: syncContactConfig
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/Thing/Contacts/overview":
+    get:
+      tags:
+      - contacts-controller
+      operationId: getContactSensorsOverviewLegacy
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/ContactSensors"
+  "/Images":
+    get:
+      tags:
+      - images-controller
+      operationId: getAvailableImages
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Images/download":
+    get:
+      tags:
+      - images-controller
+      operationId: downloadFile
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+  "/Configs":
+    get:
+      tags:
+      - configs-controller
+      operationId: getAvailableConfigs
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+  "/Configs/backup":
+    get:
+      tags:
+      - configs-controller
+      operationId: createConfigurationBackup
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+components:
+  schemas:
+    Sound:
+      type: object
+      properties:
+        streams:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Stream"
+        speakers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Speaker"
+    Speaker:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        outputType:
+          type: string
+          enum:
+          - Bluetooth
+          - _3_5mm
+        channelId:
+          type: string
+        isActive:
+          type: boolean
+    Stream:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        url:
+          type: string
+        isActive:
+          type: boolean
+    Management:
+      type: object
+      properties:
+        ip:
+          type: string
+        port:
+          type: integer
+          format: int32
+        name:
+          type: string
+        mode:
+          type: string
+          enum:
+          - Pull
+          - Push
+          - Unknown
+        appType:
+          type: string
+          enum:
+          - OpenHAB
+          - MQTT
+          - Standalone
+          - Unknown
+    UploadData:
+      type: object
+      properties:
+        destinationDir:
+          type: string
+        destinationFileName:
+          type: string
+    Image:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        active:
+          type: boolean
+    Agent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - RaspberryPi
+          - BananaPi
+          - BeagleBoneBlack
+          - Mock
+          - Unknown
+        ip:
+          type: string
+        port:
+          type: integer
+          format: int32
+        ssl:
+          "$ref": "#/components/schemas/Ssl"
+        loggerType:
+          type: string
+          enum:
+          - File
+          - Standard
+          - Void
+          - Unknown
+        loggerFilePath:
+          type: string
+    Ssl:
+      type: object
+      properties:
+        key-store-type:
+          type: string
+        key-store:
+          type: string
+        key-store-password:
+          type: string
+        key-alias:
+          type: string
+    Thing:
+      type: object
+      properties:
+        uuid:
+          type: string
+        name:
+          type: string
+        agent:
+          "$ref": "#/components/schemas/Agent"
+        management:
+          "$ref": "#/components/schemas/Management"
+        maintenance:
+          type: boolean
+        active:
+          type: boolean
+        version:
+          type: string
+    TtsConfig:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        ttsType:
+          type: string
+          enum:
+          - Offline
+          - Online
+        executor:
+          type: string
+        enabled:
+          type: boolean
+    TtsConfigs:
+      type: object
+      properties:
+        tts_configs:
+          type: array
+          items:
+            "$ref": "#/components/schemas/TtsConfig"
+        enabledTtsConfig:
+          "$ref": "#/components/schemas/TtsConfig"
+    ThingDiskInfo:
+      type: object
+      properties:
+        usedDiskSpace:
+          type: integer
+          format: int64
+        totalDiskSpace:
+          type: integer
+          format: int64
+        freeDiskSpace:
+          type: integer
+          format: int64
+    ThingHardwareInfo:
+      type: object
+      properties:
+        serialNumber:
+          type: string
+        boardType:
+          type: string
+        cpuTemperature:
+          type: number
+          format: float
+    ThingMemoryInfo:
+      type: object
+      properties:
+        sharedMemory:
+          type: integer
+          format: int64
+        freeMemory:
+          type: integer
+          format: int64
+        totalMemory:
+          type: integer
+          format: int64
+        usedMemory:
+          type: integer
+          format: int64
+    ThingOsInfo:
+      type: object
+      properties:
+        osName:
+          type: string
+        osVersion:
+          type: string
+        osArchitecture:
+          type: string
+        osFirmwareDate:
+          type: string
+        osFirmwareBuild:
+          type: string
+    ThingSystemInfo:
+      type: object
+      properties:
+        systemUptime:
+          type: integer
+          format: int64
+        thingOsInfo:
+          "$ref": "#/components/schemas/ThingOsInfo"
+        thingMemoryInfo:
+          "$ref": "#/components/schemas/ThingMemoryInfo"
+        thingDiskInfo:
+          "$ref": "#/components/schemas/ThingDiskInfo"
+        thingHardwareInfo:
+          "$ref": "#/components/schemas/ThingHardwareInfo"
+    Relay:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        pin:
+          type: integer
+          format: int32
+        name:
+          type: string
+        relayType:
+          type: string
+          enum:
+          - NC
+          - 'NO'
+          - Unknown
+        payloadType:
+          type: string
+          enum:
+          - Light
+          - HVAC
+          - Generic
+          - Unknown
+        state:
+          type: boolean
+    Relays:
+      type: object
+      properties:
+        relays:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Relay"
+    ContactSensor:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        pin:
+          type: integer
+          format: int32
+        state:
+          type: boolean
+        name:
+          type: string
+        contactType:
+          type: string
+          enum:
+          - WallSwitch
+          - MotionSwitch
+          - MagneticSwitch
+          - PushSwitch
+          - Generic
+          - Unknown
+        status:
+          type: string
+          enum:
+          - Connected
+          - NotConnected
+          - Unknown
+        triggerType:
+          type: string
+          enum:
+          - HIGH_to_LOW
+          - LOW_to_HIGH
+          - Any
+          - Unknown
+        wiringType:
+          type: string
+          enum:
+          - PullUp
+          - PullDown
+          - 'Off'
+        debounceTime:
+          type: integer
+          format: int32
+        pushDurationTime:
+          type: integer
+          format: int32
+    ContactSensors:
+      type: object
+      properties:
+        contacts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ContactSensor"
