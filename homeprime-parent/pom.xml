@@ -1,19 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>homeprime</groupId>
 	<artifactId>homeprime-parent</artifactId>
-	<version>R7A</version>
+	<version>R8A</version>
 	<packaging>pom</packaging>
 	<name>HomePrime Parent</name>
 	<description>A Maven parent for HomePrime projects</description>
 
 	<properties>
-		<homeprime.modules.version>R7A06</homeprime.modules.version>
+		<homeprime.modules.version>R8A01</homeprime.modules.version>
 		<com.pi4j.version>1.4</com.pi4j.version>
 		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
-		<!-- Java 11 -->
-		<java.version>11</java.version>
+		<!-- Java 21 -->
+		<java.version>21</java.version>
 		<!-- Jersey -->
 		<jersey.version>3.1.0-M3</jersey.version>
 		<!-- SpringBoot -->
@@ -93,7 +94,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
-					<release>11</release>
+					<release>21</release>
 				</configuration>
 			</plugin>
 		</plugins>
