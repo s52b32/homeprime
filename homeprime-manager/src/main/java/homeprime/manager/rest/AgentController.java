@@ -53,7 +53,7 @@ import homeprime.manager.tasks.pojos.Tasks;
 @RestController
 public class AgentController {
 
-    public static String managerRevision = "R7A06";
+    public static String managerRevision = "R8A01";
 
     @GetMapping("/")
     public String index() {

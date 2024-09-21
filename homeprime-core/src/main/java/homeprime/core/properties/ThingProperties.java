@@ -85,6 +85,10 @@ public class ThingProperties {
     public String getBackupsRootPath() {
         return getAppRootPath() + "backups/";
     }
+    
+    public String getThingConfigPath() {
+        return getAppRootPath() + "backups/";
+    }
 
     public String getItemsRootPath() {
         return getConfigsRootPath() + "items/";

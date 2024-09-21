@@ -20,7 +20,7 @@ import homeprime.core.properties.ThingProperties;
 @RestController
 public class ThingController {
 
-    public static String agentRevision = "R7A06";
+    public static String agentRevision = "R8A01";
 
     @RequestMapping("/")
     public String index() {

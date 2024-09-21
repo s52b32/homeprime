@@ -51,7 +51,7 @@ public class ThingInfo {
 	 */
 	@JsonProperty("uuid")
 	public String getUUID() {
-		return ThingProperties.getInstance().getThingUuid();
+		return uuid;
 	}
 
 	/**

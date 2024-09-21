@@ -1,17 +1,43 @@
 package homeprime.core.utils;
 
+import java.net.InetAddress;
+
 public class OsUtils {
-    private static String OS = null;
+	private static String os = null;
 
-    public static String getOsName() {
-        if (OS == null) {
-            OS = System.getProperty("os.name");
-        }
-        return OS;
-    }
+	/**
+	 * Get running OS name.
+	 * 
+	 * @return OS name or {@code null} if not detected
+	 */
+	public static String getOsName() {
+		if (os == null) {
+			os = System.getProperty("os.name");
+		}
+		return os;
+	}
 
-    public static boolean isWindows() {
-        return getOsName().startsWith("Windows");
-    }
+	/**
+	 * Detect if running host is Windows or not.
+	 * 
+	 * @return {@code true} if Windows otherwise {@code false}
+	 */
+	public static boolean isWindows() {
+		return getOsName().startsWith("Windows");
+	}
+
+	/**
+	 * Get host name.
+	 * 
+	 * @return name of the host or {@code null} if not found
+	 */
+	public static String getHostName() {
+		try {
+			// get system name
+			return InetAddress.getLocalHost().getHostName();
+		} catch (Exception E) {
+			return null;
+		}
+	}
 
 }
